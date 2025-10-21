@@ -1,15 +1,17 @@
 package router
 
 import (
+	"chesscom-copy/backend/internal/initiator"
 	"chesscom-copy/backend/internal/pages"
+	"chesscom-copy/backend/users/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter() *gin.Engine {
+func SetupRouter(controllers *initiator.Controllers) *gin.Engine {
 	r := gin.Default()
 
-	// Middleware CORS (pour autoriser le frontend à appeler l’API)
+	// Middleware CORS
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
@@ -25,6 +27,9 @@ func SetupRouter() *gin.Engine {
 	api := r.Group("/api")
 	{
 		api.GET("/home", pages.HomePage)
+
+		// Utilise le contrôleur instancié dans initiator
+		routes.RegisterUserRoutes(api, controllers.UserController)
 	}
 
 	return r
