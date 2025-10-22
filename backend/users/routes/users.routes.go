@@ -1,13 +1,14 @@
-package routes
+package usersRoutes
 
 import (
 	// "chesscom-copy/backend/internal/middlewares"
-	controller "chesscom-copy/backend/users/controllers"
+
+	usersController "chesscom-copy/backend/users/controllers/users"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterUserRoutes(rg *gin.RouterGroup, uc *controller.UserController) {
+func RegisterUserRoutes(rg *gin.RouterGroup, uc *usersController.UserController) {
 	userGroup := rg.Group("/users")
 	{
 		// userGroup.GET("/", middlewares.JWTMiddleware(), uc.List)

@@ -1,7 +1,6 @@
-package dto
+package usersDto
 
-type CreateUsersDTO struct {
-	Username string `json:"username" binding:"required"`
+type UsersLoginDTO struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
 }

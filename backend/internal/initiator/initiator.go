@@ -1,22 +1,34 @@
 package initiator
 
 import (
-	controller "chesscom-copy/backend/users/controllers"
-	"chesscom-copy/backend/users/repository"
-	service "chesscom-copy/backend/users/services"
+	"chesscom-copy/backend/games/controllers/gameModeGroupsController"
+	"chesscom-copy/backend/games/repository/gameModeGroupsRepository"
+	"chesscom-copy/backend/games/services/gameModeGroupsService"
+	usersController "chesscom-copy/backend/users/controllers/users"
+	usersRepository "chesscom-copy/backend/users/repository/users"
+	usersService "chesscom-copy/backend/users/services/users"
+
 	"database/sql"
 )
 
 type Controllers struct {
-	UserController *controller.UserController
+	UserController          *usersController.UserController
+	GameModeGroupController *gameModeGroupsController.GameModeGroupsController
 }
 
 func InitControllers(db *sql.DB) *Controllers {
-	userRepo := &repository.UserRepository{DB: db}
-	userService := &service.UserService{Repo: userRepo}
-	userController := &controller.UserController{Service: userService}
+	//USERS
+	userRepo := &usersRepository.UserRepository{DB: db}
+	userService := &usersService.UserService{Repo: userRepo}
+	userController := &usersController.UserController{Service: userService}
+
+	//GAMEMODEGROUPS
+	gameModeGroupRepo := &gameModeGroupsRepository.GameModeGroupsRepository{DB: db}
+	gameModeGroupService := &gameModeGroupsService.GameModeGroupsService{Repo: gameModeGroupRepo}
+	gameModeGroupController := &gameModeGroupsController.GameModeGroupsController{Service: gameModeGroupService}
 
 	return &Controllers{
-		UserController: userController,
+		UserController:          userController,
+		GameModeGroupController: gameModeGroupController,
 	}
 }

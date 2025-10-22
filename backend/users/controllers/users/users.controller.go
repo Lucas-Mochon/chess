@@ -1,15 +1,15 @@
-package controller
+package usersController
 
 import (
-	"chesscom-copy/backend/users/dto"
-	service "chesscom-copy/backend/users/services"
+	usersDto "chesscom-copy/backend/users/dto/users"
+	usersService "chesscom-copy/backend/users/services/users"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	Service *service.UserService
+	Service *usersService.UserService
 }
 
 func (c *UserController) List(ctx *gin.Context) {
@@ -22,7 +22,7 @@ func (c *UserController) List(ctx *gin.Context) {
 }
 
 func (uc *UserController) Register(ctx *gin.Context) {
-	var input dto.CreateUsersDTO
+	var input usersDto.CreateUsersDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -37,7 +37,7 @@ func (uc *UserController) Register(ctx *gin.Context) {
 }
 
 func (ctrl *UserController) Login(c *gin.Context) {
-	var loginDTO dto.UsersLoginDTO
+	var loginDTO usersDto.UsersLoginDTO
 	if err := c.ShouldBindJSON(&loginDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
