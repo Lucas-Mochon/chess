@@ -6,11 +6,11 @@ import (
 	"database/sql"
 )
 
-type GameModeGroupsRepository struct {
+type GameModesRepository struct {
 	DB *sql.DB
 }
 
-func (r *GameModeGroupsRepository) List() ([]models.GameMode, error) {
+func (r *GameModesRepository) List() ([]models.GameMode, error) {
 	rows, err := r.DB.Query(`
         SELECT 
             id, 
@@ -43,7 +43,7 @@ func (r *GameModeGroupsRepository) List() ([]models.GameMode, error) {
 	return gameModes, nil
 }
 
-func (r *GameModeGroupsRepository) Create(gameMode gameModesDto.CreateGameModesDTO) error {
+func (r *GameModesRepository) Create(gameMode gameModesDto.CreateGameModesDTO) error {
 	_, err := r.DB.Exec(
 		`INSERT INTO game_modes 
 		(game_mode_groups_id, name, description, default_stats ) 

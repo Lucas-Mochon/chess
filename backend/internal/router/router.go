@@ -1,7 +1,7 @@
 package router
 
 import (
-	"chesscom-copy/backend/internal/initiator"
+	"chesscom-copy/backend/internal/common/initiator"
 	gamesRoutes "chesscom-copy/backend/internal/models/games/routes"
 	usersRoutes "chesscom-copy/backend/internal/models/users/routes"
 	"chesscom-copy/backend/internal/pages"
@@ -29,8 +29,16 @@ func SetupRouter(controllers *initiator.Controllers) *gin.Engine {
 	{
 		api.GET("/home", pages.HomePage)
 
-		usersRoutes.RegisterUserRoutes(api, controllers.UserController)
-		gamesRoutes.RegisterGamesRoutes(api, controllers.GameModeController, controllers.GameModeGroupController)
+		usersRoutes.RegisterUserRoutes(
+			api,
+			controllers.Users.UserController,
+		)
+
+		gamesRoutes.RegisterGamesRoutes(
+			api,
+			controllers.Games.GameModeController,
+			controllers.Games.GameModeGroupController,
+		)
 
 	}
 

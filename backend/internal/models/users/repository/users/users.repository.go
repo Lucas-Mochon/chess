@@ -31,13 +31,21 @@ func (r *UserRepository) List() ([]models.Users, error) {
 	return users, nil
 }
 
-func (r *UserRepository) Register(user usersDto.CreateUsersDTO) error {
-	_, err := r.DB.Exec(
-		"INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)",
-		user.Username, user.Email, user.Password,
-	)
+func (r *UserRepository) Register(user usersDto.CreateUsersDTO) (models.Users, error) {
+	var createdUser models.Users
 
-	return err
+	err := r.DB.QueryRow(
+		`INSERT INTO users (username, email, password_hash)
+         VALUES ($1, $2, $3)
+         RETURNING id, username, email`,
+		user.Username, user.Email, user.Password,
+	).Scan(&createdUser.Id, &createdUser.Username, &createdUser.Email)
+
+	if err != nil {
+		return models.Users{}, err
+	}
+
+	return createdUser, nil
 }
 
 func (r *UserRepository) Login(user usersDto.UsersLoginDTO) (*models.Users, error) {

@@ -28,12 +28,17 @@ func (uc *UserController) Register(ctx *gin.Context) {
 		return
 	}
 
-	if err := uc.Service.Register(input); err != nil {
+	userModel, err := uc.Service.Register(input)
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Utilisateur créé avec succès"})
+	ctx.JSON(http.StatusCreated, gin.H{
+		"message": "Utilisateur créé avec succès",
+		"user":    userModel,
+	})
+
 }
 
 func (ctrl *UserController) Login(c *gin.Context) {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"chesscom-copy/backend/db"
-	"chesscom-copy/backend/internal/initiator"
+	"chesscom-copy/backend/internal/common/initiator"
 	"chesscom-copy/backend/internal/router"
 	"log"
 )

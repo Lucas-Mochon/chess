@@ -7,7 +7,7 @@ import (
 )
 
 type GameModesService struct {
-	Repo *gameModesRepository.GameModeGroupsRepository
+	Repo *gameModesRepository.GameModesRepository
 }
 
 func (s *GameModesService) List() ([]models.GameMode, error) {
