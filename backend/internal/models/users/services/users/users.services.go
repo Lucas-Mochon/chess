@@ -2,9 +2,9 @@ package usersService
 
 import (
 	"chesscom-copy/backend/db/models"
+	usersDto "chesscom-copy/backend/internal/models/users/dto/users"
+	usersRepository "chesscom-copy/backend/internal/models/users/repository/users"
 	"chesscom-copy/backend/internal/utils"
-	usersDto "chesscom-copy/backend/users/dto/users"
-	usersRepository "chesscom-copy/backend/users/repository/users"
 
 	"golang.org/x/crypto/bcrypt"
 )

@@ -1,10 +1,10 @@
 package router
 
 import (
-	gamesRoutes "chesscom-copy/backend/games/routes"
 	"chesscom-copy/backend/internal/initiator"
+	gamesRoutes "chesscom-copy/backend/internal/models/games/routes"
+	usersRoutes "chesscom-copy/backend/internal/models/users/routes"
 	"chesscom-copy/backend/internal/pages"
-	usersRoutes "chesscom-copy/backend/users/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,9 +29,8 @@ func SetupRouter(controllers *initiator.Controllers) *gin.Engine {
 	{
 		api.GET("/home", pages.HomePage)
 
-		// Utilise le contrôleur instancié dans initiator
 		usersRoutes.RegisterUserRoutes(api, controllers.UserController)
-		gamesRoutes.RegisterGamesRoutes(api, controllers.GameModeGroupController)
+		gamesRoutes.RegisterGamesRoutes(api, controllers.GameModeController, controllers.GameModeGroupController)
 
 	}
 

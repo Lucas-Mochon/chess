@@ -2,7 +2,7 @@ package gameModeGroupsRepository
 
 import (
 	"chesscom-copy/backend/db/models"
-	gameModeGroupsDto "chesscom-copy/backend/games/dto/game_mode_groups"
+	gameModeGroupsDto "chesscom-copy/backend/internal/models/games/dto/game_mode_groups"
 	"database/sql"
 )
 

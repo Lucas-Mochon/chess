@@ -1,8 +1,8 @@
 package gameModeGroupsController
 
 import (
-	dto "chesscom-copy/backend/games/dto/game_mode_groups"
-	"chesscom-copy/backend/games/services/gameModeGroupsService"
+	dto "chesscom-copy/backend/internal/models/games/dto/game_mode_groups"
+	"chesscom-copy/backend/internal/models/games/services/gameModeGroupsService"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -3,7 +3,7 @@ package usersRoutes
 import (
 	// "chesscom-copy/backend/internal/middlewares"
 
-	usersController "chesscom-copy/backend/users/controllers/users"
+	usersController "chesscom-copy/backend/internal/models/users/controllers/users"
 
 	"github.com/gin-gonic/gin"
 )

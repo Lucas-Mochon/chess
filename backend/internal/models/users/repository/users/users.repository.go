@@ -2,7 +2,7 @@ package usersRepository
 
 import (
 	"chesscom-copy/backend/db/models"
-	usersDto "chesscom-copy/backend/users/dto/users"
+	usersDto "chesscom-copy/backend/internal/models/users/dto/users"
 	"database/sql"
 	"fmt"
 

@@ -2,8 +2,8 @@ package gameModeGroupsService
 
 import (
 	"chesscom-copy/backend/db/models"
-	dto "chesscom-copy/backend/games/dto/game_mode_groups"
-	"chesscom-copy/backend/games/repository/gameModeGroupsRepository"
+	dto "chesscom-copy/backend/internal/models/games/dto/game_mode_groups"
+	"chesscom-copy/backend/internal/models/games/repository/gameModeGroupsRepository"
 )
 
 type GameModeGroupsService struct {

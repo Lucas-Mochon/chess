@@ -1,8 +1,8 @@
 package usersController
 
 import (
-	usersDto "chesscom-copy/backend/users/dto/users"
-	usersService "chesscom-copy/backend/users/services/users"
+	usersDto "chesscom-copy/backend/internal/models/users/dto/users"
+	usersService "chesscom-copy/backend/internal/models/users/services/users"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
