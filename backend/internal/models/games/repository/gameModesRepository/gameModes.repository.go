@@ -14,7 +14,6 @@ func (r *GameModesRepository) List() ([]models.GameMode, error) {
 	rows, err := r.DB.Query(`
         SELECT 
             id, 
-            game_id, 
             game_mode_groups_id, 
             name, 
             description, 
@@ -30,7 +29,6 @@ func (r *GameModesRepository) List() ([]models.GameMode, error) {
 		var gm models.GameMode
 		if err := rows.Scan(
 			&gm.ID,
-			&gm.GameID,
 			&gm.GameModeGroupsID,
 			&gm.Name,
 			&gm.Description,

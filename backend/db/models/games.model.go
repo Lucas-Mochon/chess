@@ -10,4 +10,5 @@ type Games struct {
 	DurationSeconds int       `db:"duration_seconds"`
 	StartedAt       time.Time `db:"started_at"`
 	EndedAt         time.Time `db:"ended_at"`
+	GameModeId      int       `db:"game_mode_id"`
 }

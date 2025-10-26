@@ -1,0 +1,2 @@
+ALTER TABLE games
+ADD COLUMN game_mode_id INTEGER;
