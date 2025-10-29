@@ -37,6 +37,7 @@ func SetupRouter(controllers *initiator.Controllers) *gin.Engine {
 		gamesRoutes.RegisterGamesRoutes(
 			api,
 			controllers.Games.GamesControllers,
+			controllers.Games.GameMovesController,
 			controllers.Games.GameModeController,
 			controllers.Games.GameModeGroupController,
 		)

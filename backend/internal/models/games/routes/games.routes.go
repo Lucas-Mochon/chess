@@ -4,6 +4,7 @@ import (
 	"chesscom-copy/backend/internal/common/middlewares"
 	"chesscom-copy/backend/internal/models/games/controllers/gameModeGroupsController"
 	"chesscom-copy/backend/internal/models/games/controllers/gameModesController.go"
+	gameMovesController "chesscom-copy/backend/internal/models/games/controllers/gameMoves"
 	gamesController "chesscom-copy/backend/internal/models/games/controllers/games"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,7 @@ import (
 
 func RegisterGamesRoutes(rg *gin.RouterGroup,
 	controllerGames *gamesController.GamesController,
+	controllerGameMoves *gameMovesController.GameMovesController,
 	controllerGameModes *gameModesController.GameModesController,
 	controllerGameModeGroups *gameModeGroupsController.GameModeGroupsController) {
 
@@ -21,6 +23,12 @@ func RegisterGamesRoutes(rg *gin.RouterGroup,
 		GamesGroup.GET("/get/:gameId", controllerGames.GetById)
 		GamesGroup.POST("/create", controllerGames.Create)
 		GamesGroup.PUT("/finish", controllerGames.Finish)
+
+		GameMoves := GamesGroup.Group("/moves")
+		{
+			GameMoves.GET("/list/:gameId", controllerGameMoves.ListByGame)
+			GameMoves.POST("/create", controllerGameMoves.Create)
+		}
 
 		GamesModes := GamesGroup.Group("/modes")
 		{
