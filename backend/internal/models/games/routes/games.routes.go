@@ -26,8 +26,8 @@ func RegisterGamesRoutes(rg *gin.RouterGroup,
 
 		GameMoves := GamesGroup.Group("/moves")
 		{
-			GameMoves.GET("/list/:gameId", controllerGameMoves.ListByGame)
-			GameMoves.POST("/create", controllerGameMoves.Create)
+			GameMoves.GET("/list/:gameId", middlewares.JWTMiddleware(), controllerGameMoves.ListByGame)
+			GameMoves.POST("/create", middlewares.JWTMiddleware(), controllerGameMoves.Create)
 		}
 
 		GamesModes := GamesGroup.Group("/modes")
