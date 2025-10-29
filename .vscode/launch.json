@@ -20,17 +20,46 @@
             "request": "launch",
             "command": "npx react-native run-android",
             "cwd": "${workspaceFolder}/mobileChess"
+        },
+        {
+            "name": "🍏 Frontend React Native (iOS)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npx react-native run-ios",
+            "cwd": "${workspaceFolder}/mobileChess"
+        },
+        {
+            "name": "🌐 Frontend React Native (Web)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npx expo start --web",
+            "cwd": "${workspaceFolder}/mobileChess"
         }
     ],
     "compounds": [
         {
-            "name": "🚀 Lancer Backend + Frontend",
+            "name": "🚀 Lancer Backend + Android",
             "configurations": [
                 "🟢 Backend Go",
                 "📱 Frontend React Native (Android)"
             ],
-            "stopAll": true,
-            "preLaunchTask": ""
+            "stopAll": true
+        },
+        {
+            "name": "🚀 Lancer Backend + iOS",
+            "configurations": [
+                "🟢 Backend Go",
+                "🍏 Frontend React Native (iOS)"
+            ],
+            "stopAll": true
+        },
+        {
+            "name": "🚀 Lancer Backend + Web",
+            "configurations": [
+                "🟢 Backend Go",
+                "🌐 Frontend React Native (Web)"
+            ],
+            "stopAll": true
         }
     ]
 }
