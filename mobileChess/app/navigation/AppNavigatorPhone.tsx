@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Icon } from 'react-native-elements';
 
 // Import des écrans
-import HomeScreen from '../screens/acceuil';
+import HomeScreen from '../screens/phone/acceuil';
 
 
 

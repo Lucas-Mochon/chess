@@ -5,7 +5,7 @@ import "time"
 type UserStats struct {
 	Id          string    `db:"id"`
 	UserId      int       `db:"user_id"`
-	GameModesId int       `db;game_modes_id`
+	GameModesId int       `db:"game_modes_id"`
 	Rating      int       `db:"rating"`
 	GamesPlayed int       `db:"games_played"`
 	Wins        int       `db:"wins"`
