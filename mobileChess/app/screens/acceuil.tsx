@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import MainLayout from '../../components/phone/MainLayout';
-import PremiumBanner from '../../components/phone/PremiumBanner';
-import BasicCard from '../../components/phone/BasicCard';
+import MainLayout from '../components/MainLayout';
+import PremiumBanner from '../components/PremiumBanner';
+import BasicCard from '../components/BasicCard';
 
 const HomeScreen = () => {
     return (

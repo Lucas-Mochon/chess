@@ -29,11 +29,11 @@
             "cwd": "${workspaceFolder}/mobileChess"
         },
         {
-            "name": "🌐 Frontend React Native (Web)",
+            "name": "🌐 Frontend React (Web)",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npx expo start --web",
-            "cwd": "${workspaceFolder}/mobileChess"
+            "command": "npx start",
+            "cwd": "${workspaceFolder}/web"
         }
     ],
     "compounds": [
@@ -57,7 +57,7 @@
             "name": "🚀 Lancer Backend + Web",
             "configurations": [
                 "🟢 Backend Go",
-                "🌐 Frontend React Native (Web)"
+                "🌐 Frontend React (Web)"
             ],
             "stopAll": true
         }
