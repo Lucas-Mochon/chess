@@ -21,7 +21,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const colors = {
-        background: theme === 'dark' ? '#2B2B2B' : '#F5F5F5',
+        background: theme === 'dark' ? '#302E2B' : '#F5F5F5',
         text: theme === 'dark' ? '#FFFFFF' : '#000000',
     };
 

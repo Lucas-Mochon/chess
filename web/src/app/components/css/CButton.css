@@ -1,0 +1,15 @@
+.custom-btn {
+    background-color: #a0cd5e;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 40px;
+    font-size: 1.4rem;
+    box-shadow: 0 6px #558d44;
+    transition: all 0.2s ease;
+}
+
+.custom-btn:hover {
+    box-shadow: 0 4px #558d44, 0 0 20px rgba(160, 205, 94, 0.8);
+}

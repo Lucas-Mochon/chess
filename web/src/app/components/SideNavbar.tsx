@@ -27,10 +27,9 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
             const width = forceExpanded || isExpanded ? 250 : 64;
             onExpandChange?.(width);
         };
-        handleWidthChange(); // à l'initialisation
+        handleWidthChange();
     }, [forceExpanded, isExpanded, onExpandChange]);
 
-    // Handle responsive
     useEffect(() => {
         const handleResize = () => {
             const expanded = window.innerWidth >= 1200;
@@ -47,7 +46,6 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, [onExpandChange]);
 
-    // Close subMenu if click outside
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (
@@ -94,8 +92,9 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
         <>
             <div
                 ref={navbarRef}
-                className="position-fixed top-0 start-0 bg-dark text-light d-flex flex-column"
+                className="position-fixed top-0 start-0 text-light d-flex flex-column"
                 style={{
+                    backgroundColor: "#262522",
                     width: currentWidth,
                     height: '100vh',
                     transition: 'width 0.3s ease',
@@ -155,8 +154,9 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
             {isSubMenuOpen && (
                 <div
                     ref={subMenuRef}
-                    className="position-fixed top-0 bg-dark text-light p-3 shadow"
+                    className="position-fixed top-0 text-light p-3 shadow"
                     style={{
+                        backgroundColor: "#141413",
                         left: currentWidth,
                         top: 0,
                         height: '100vh',

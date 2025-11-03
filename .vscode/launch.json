@@ -32,7 +32,7 @@
             "name": "🌐 Frontend React (Web)",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npx start",
+            "command": "npm start",
             "cwd": "${workspaceFolder}/web"
         }
     ],

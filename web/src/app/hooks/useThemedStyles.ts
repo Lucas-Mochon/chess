@@ -7,7 +7,7 @@ export const useThemedStyles = () => {
     const themedStyles = useMemo(() => {
         return {
             textClass: colors.text === '#FFFFFF' ? 'text-light' : 'text-dark',
-            backgroundClass: colors.background === '#2B2B2B' ? 'bg-dark' : 'bg-light',
+            backgroundClass: colors.background === '#302E2B' ? '#302E2B' : '#F0F0F0',
             inlineStyles: {
                 color: colors.text,
                 backgroundColor: colors.background,

@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from '../components/MainLayout';
-import HomeScreen from '../screens/home';
+// import HomeScreen from '../screens/home';
+import GetStarted from '../screens/home/getStarted';
 
 const withLayout = (Component: React.ComponentType<any>) => {
     return (props: any) => (
@@ -15,8 +16,9 @@ const AppNavigator: React.FC = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={withLayout(HomeScreen)({})} />
                 {/* Ajoute d'autres routes ici si nécessaire */}
+                {/* <Route path="/" element={withLayout(HomeScreen)({})} /> */}
+                <Route path="/" element={withLayout(GetStarted)({})} />
             </Routes>
         </Router>
     );
