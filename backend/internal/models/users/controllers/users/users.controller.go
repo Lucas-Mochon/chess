@@ -18,17 +18,17 @@ func (c *UserController) List(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusOK, users)
+	ctx.JSON(http.StatusOK, gin.H{"users": users})
 }
 
-func (uc *UserController) Register(ctx *gin.Context) {
+func (c *UserController) Register(ctx *gin.Context) {
 	var input usersDto.CreateUsersDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	userModel, err := uc.Service.Register(input)
+	userModel, err := c.Service.Register(input)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -38,21 +38,20 @@ func (uc *UserController) Register(ctx *gin.Context) {
 		"message": "Utilisateur créé avec succès",
 		"user":    userModel,
 	})
-
 }
 
-func (ctrl *UserController) Login(c *gin.Context) {
+func (c *UserController) Login(ctx *gin.Context) {
 	var loginDTO usersDto.UsersLoginDTO
-	if err := c.ShouldBindJSON(&loginDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := ctx.ShouldBindJSON(&loginDTO); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	token, err := ctrl.Service.Login(loginDTO)
+	token, err := c.Service.Login(loginDTO)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	ctx.JSON(http.StatusOK, gin.H{"token": token})
 }

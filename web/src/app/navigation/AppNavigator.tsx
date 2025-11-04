@@ -4,6 +4,7 @@ import MainLayout from '../components/MainLayout';
 // import HomeScreen from '../screens/home';
 import GetStarted from '../screens/home/getStarted';
 import Connection from '../screens/user/connection';
+import LoginPage from '../screens/user/connection/login';
 
 
 const withLayout = (Component: React.ComponentType<any>) => {
@@ -22,6 +23,7 @@ const AppNavigator: React.FC = () => {
                 {/* <Route path="/" element={withLayout(HomeScreen)({})} /> */}
                 <Route path="/" element={withLayout(GetStarted)({})} />
                 <Route path="/connect" element={withLayout(Connection)({})} />
+                <Route path="/login" element={withLayout(LoginPage)({})} />
             </Routes>
         </Router>
     );
