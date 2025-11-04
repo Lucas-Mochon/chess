@@ -51,14 +51,13 @@ const GetStarted = () => {
                             Improve your game.<br />
                             Have fun!
                         </h2>
-                        <CButton link="#" text="Get Started" />
+                        <CButton link="/connect" text="Get Started" />
                     </div>
                 </div>
             </div>
 
             <div className="text-center mt-5 d-flex flex-row justify-content-center">
                 <a
-                    href="#"
                     onClick={handleLearnMoreClick}
                     className="text-decoration-none text-white d-flex flex-column align-items-center"
                 >
