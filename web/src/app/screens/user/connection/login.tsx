@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
                 email,
                 password,
             });
-            navigate('/dashboard')
+            navigate('/')
         } catch (err: any) {
             setError(
                 err.response?.data?.message ||
@@ -63,6 +63,9 @@ const LoginPage: React.FC = () => {
                         <input
                             type="text"
                             className="form-control bg-dark text-light border-0"
+                            style={{
+                                background: '#403E3C'
+                            }}
                             placeholder="Username, Phone, or Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
