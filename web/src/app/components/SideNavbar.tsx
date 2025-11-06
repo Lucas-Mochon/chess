@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { mainMenu, subMenus } from '../utils/sideNavbarElements';
 import { useTheme } from '../contexts/ThemeContext';
 import * as MdIcons from 'react-icons/md';
+import LogoButton from './LogoButton';
 
 interface SideNavbarProps {
     onExpandChange?: (width: number) => void;
@@ -109,6 +110,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
                 }}
                 onMouseLeave={handleMouseLeave}
             >
+                <LogoButton />
                 <div className="flex-grow-1">
                     {mainMenu.map((item) => {
                         const IconComponent = MdIcons[item.icon as keyof typeof MdIcons] as React.ComponentType<any>;

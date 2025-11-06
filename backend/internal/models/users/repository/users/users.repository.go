@@ -50,7 +50,13 @@ func (r *UserRepository) Register(user usersDto.CreateUsersDTO) (models.Users, e
 
 func (r *UserRepository) Login(user usersDto.UsersLoginDTO) (*models.Users, error) {
 	var dbUser models.Users
-	if err := r.DB.QueryRow("SELECT id, email, password_hash FROM users WHERE email = $1", user.Email).Scan(&dbUser.Id, &dbUser.Email, &dbUser.PasswordHash); err != nil {
+
+	err := r.DB.QueryRow(
+		"SELECT id, email, password_hash FROM users WHERE email = $1",
+		user.Email,
+	).Scan(&dbUser.Id, &dbUser.Email, &dbUser.PasswordHash)
+
+	if err != nil {
 		return nil, fmt.Errorf("utilisateur non trouvé")
 	}
 

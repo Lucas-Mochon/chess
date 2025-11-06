@@ -39,16 +39,16 @@ func (s *UserService) Register(user usersDto.CreateUsersDTO) (models.Users, erro
 	return createdUser, nil
 }
 
-func (s *UserService) Login(user usersDto.UsersLoginDTO) (string, error) {
+func (s *UserService) Login(user usersDto.UsersLoginDTO) (string, *models.Users, error) {
 	dbUser, err := s.Repo.Login(user)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	token, err := utils.GenerateJWT(dbUser.Id, dbUser.Email)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
-	return token, nil
+	return token, dbUser, nil
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { apiService } from '../../../service/api';
 import { useThemedStyles } from '../../../hooks/useThemedStyles';
 import LogoButton from '../../../components/LogoButton';
 import CButton from '../../../components/CButton';
 import { useNavigate } from 'react-router-dom';
+import { authService } from '../../../service/auth';
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -19,10 +19,7 @@ const LoginPage: React.FC = () => {
         setLoading(true);
 
         try {
-            await apiService.post('/api/users/login', {
-                email,
-                password,
-            });
+            authService.connect(email, password)
             navigate('/')
         } catch (err: any) {
             setError(

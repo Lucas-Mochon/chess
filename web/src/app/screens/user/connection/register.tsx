@@ -1,12 +1,12 @@
 import { useState } from "react";
 import CButton from "../../../components/CButton";
 import { useThemedStyles } from "../../../hooks/useThemedStyles";
-import { apiService } from "../../../service/api";
 import { useNavigate } from "react-router-dom";
 import LogoButton from "../../../components/LogoButton";
 import './css/register.css';
 import { TiArrowLeftThick } from "react-icons/ti";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { authService } from "../../../service/auth";
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -22,12 +22,8 @@ const Register: React.FC = () => {
         setError(null);
         setLoading(true);
         try {
-            await apiService.post('/api/users/register', {
-                username,
-                email,
-                password,
-            });
-            navigate('/')
+            authService.register(email, password, username)
+            navigate('/login')
         } catch (err: any) {
             setError(
                 err.response?.data?.message ||

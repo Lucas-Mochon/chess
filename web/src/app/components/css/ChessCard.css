@@ -1,0 +1,24 @@
+.custom-btn {
+    background-color: #1D1C1A;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 14px 40px;
+    font-size: 1.4rem;
+    box-shadow: 0 6px #1A1918;
+    transition: all 0.2s ease;
+}
+
+.chess-card:hover {
+    .custom-btn {
+        background-color: #3B3936;
+    }
+}
+
+.chess-card-header {
+    height: 50px;
+}

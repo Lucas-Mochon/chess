@@ -47,11 +47,11 @@ func (c *UserController) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := c.Service.Login(loginDTO)
+	token, data, err := c.Service.Login(loginDTO)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"token": token})
+	ctx.JSON(http.StatusOK, gin.H{"data": data, "token": token})
 }

@@ -1,10 +1,6 @@
 import React from "react";
 import "./css/CButton.css";
-import { FaApple } from "react-icons/fa";
-import { MdOutlinePhoneIphone } from "react-icons/md";
-import { FcGoogle } from "react-icons/fc";
-import { IoMail } from "react-icons/io5";
-import { FaFacebook } from "react-icons/fa6";
+import CustomIcon from "./CIcon";
 
 interface CButtonProps {
     link?: string;
@@ -12,6 +8,8 @@ interface CButtonProps {
     color?: string;
     logo?: string;
     icon?: string;
+    iconSize?: number;
+    iconColor?: string;
     type?: "button" | "submit";
     disabled?: boolean;
 }
@@ -22,11 +20,12 @@ const CButton: React.FC<CButtonProps> = ({
     color,
     logo,
     icon,
+    iconColor,
+    iconSize,
     type,
     disabled = false,
 }) => {
-    let classPrefix =
-        "btn-lg text-decoration-none d-inline-block text-center p-2 m-1 position-relative w-100";
+    let classPrefix = "btn-lg text-decoration-none d-inline-block text-center p-2 m-1 position-relative w-100";
     if (color === "black") classPrefix += " custom-btn-black";
     if (color === "green" || color === undefined) classPrefix += " custom-btn-green";
     if (disabled) classPrefix += " disabled";
@@ -45,25 +44,11 @@ const CButton: React.FC<CButtonProps> = ({
                 />
             );
         } else if (icon) {
-            switch (icon) {
-                case "phone":
-                    return <MdOutlinePhoneIphone size={20} />;
-                case "google":
-                    return <FcGoogle size={20} />;
-                case "apple":
-                    return <FaApple size={20} />;
-                case "mail":
-                    return <IoMail size={20} />;
-                case "facebook":
-                    return <FaFacebook size={20} />;
-                default:
-                    return null;
-            }
+            return <CustomIcon name={icon} size={iconSize} color={iconColor} />
         }
         return null;
     };
 
-    // Si c’est un bouton de type submit, on rend <button>, sinon <a>
     if (type === "submit") {
         return (
             <button
