@@ -25,3 +25,28 @@
     box-shadow: 0 6px #1A1918;
     transition: all 0.2s ease;
 }
+
+.custom-btn-black:hover {
+    background-color: #3B3936;
+}
+
+.custom-btn-large {
+    padding: 16px 20px;
+    font-size: 1.5rem;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+}
+
+.custom-btn-large .d-flex {
+    height: 100%;
+}
+
+.custom-btn-large .pe-2 {
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+}

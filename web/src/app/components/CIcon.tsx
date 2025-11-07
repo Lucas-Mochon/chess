@@ -22,6 +22,8 @@ import * as VscIcons from 'react-icons/vsc';
 import * as PiIcons from 'react-icons/pi';
 import * as CgIcons from 'react-icons/cg';
 import * as LiaIcons from "react-icons/lia";
+import * as RxIcons from "react-icons/rx";
+import * as SlIcons from "react-icons/sl";
 
 export const iconSets = {
     Ai: AiIcons,
@@ -48,6 +50,8 @@ export const iconSets = {
     Cg: CgIcons,
     Ci: CiIcons,
     Lia: LiaIcons,
+    Rx: RxIcons,
+    Sl: SlIcons,
 };
 
 interface CustomIconProps {

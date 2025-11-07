@@ -13,12 +13,31 @@
     transition: all 0.2s ease;
 }
 
-.chess-card:hover {
-    .custom-btn {
-        background-color: #3B3936;
-    }
+.chess-card:hover .custom-btn {
+    background-color: #3B3936;
 }
 
 .chess-card-header {
-    height: 50px;
+    height: 100px;
+    padding: 0 10px;
+}
+
+.chess-board-container {
+    margin-bottom: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    overflow: hidden;
+}
+
+.chess-board-image {
+    display: block;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.chess-card {
+    padding: 0;
+    margin-bottom: 20px;
 }

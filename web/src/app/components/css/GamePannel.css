@@ -1,0 +1,105 @@
+.game-pannel {
+    background-color: #262522;
+    color: white;
+}
+
+.game-image-container {
+    position: relative;
+    margin-right: 15px;
+}
+
+.game-image {
+    border-top-left-radius: 8px;
+    width: 100%;
+    max-width: 250px;
+    display: block;
+}
+
+
+.game-buttons {
+    display: flex;
+    width: 100%;
+    max-width: 250px;
+    height: 100%;
+}
+
+.btn-decline-defi {
+    flex: 0 0 30%;
+    background-color: #403F3D;
+    border: none;
+    padding: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom-left-radius: 8px;
+}
+
+
+.btn-accept-defi {
+    flex: 0 0 70%;
+    background-color: #A3D160;
+    border: none;
+    padding: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.list-buttons {
+    gap: 8px;
+}
+
+.btn-decline-defi-line {
+    background-color: #403F3D;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: none;
+}
+
+
+.btn-accept-defi-line {
+    background-color: #A3D160;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: none;
+}
+
+.view-toggle .btn-link {
+    text-decoration: none;
+}
+
+.game-card {
+    height: 100%;
+    transition: all 0.2s;
+}
+
+.game-info {
+    background-color: #21221D;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.game-image-small {
+    object-fit: cover;
+}
+
+.game-card-list {
+    background-color: #21221D;
+    transition: all 0.2s;
+}
+
+hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-title {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+}

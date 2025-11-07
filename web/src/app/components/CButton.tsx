@@ -12,6 +12,7 @@ interface CButtonProps {
     iconColor?: string;
     type?: "button" | "submit";
     disabled?: boolean;
+    size?: "normal" | "large";
 }
 
 const CButton: React.FC<CButtonProps> = ({
@@ -21,11 +22,21 @@ const CButton: React.FC<CButtonProps> = ({
     logo,
     icon,
     iconColor,
-    iconSize,
+    iconSize = 24,
     type,
     disabled = false,
+    size = "normal",
 }) => {
-    let classPrefix = "btn-lg text-decoration-none d-inline-block text-center p-2 m-1 position-relative w-100";
+    let classPrefix = "text-decoration-none d-inline-block text-center position-relative w-100";
+
+    // Ajout de classes en fonction de la taille
+    if (size === "large") {
+        classPrefix += " custom-btn-large";
+    } else {
+        classPrefix += " btn-lg p-2 m-1";
+    }
+
+    // Ajout de classes en fonction de la couleur
     if (color === "black") classPrefix += " custom-btn-black";
     if (color === "green" || color === undefined) classPrefix += " custom-btn-green";
     if (disabled) classPrefix += " disabled";
@@ -37,16 +48,24 @@ const CButton: React.FC<CButtonProps> = ({
                     src={logo}
                     alt=""
                     style={{
-                        width: "20px",
-                        height: "20px",
+                        width: size === "large" ? "30px" : "20px",
+                        height: size === "large" ? "30px" : "20px",
                         verticalAlign: "middle",
                     }}
                 />
             );
         } else if (icon) {
-            return <CustomIcon name={icon} size={iconSize} color={iconColor} />
+            return <CustomIcon name={icon} size={size === "large" ? iconSize * 1.5 : iconSize} color={iconColor} />
         }
         return null;
+    };
+
+    const buttonStyle = {
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.6 : 1,
+        minHeight: size === "large" ? "70px" : "auto",
+        fontSize: size === "large" ? "1.5rem" : "1rem",
+        padding: size === "large" ? "16px 20px" : undefined
     };
 
     if (type === "submit") {
@@ -55,7 +74,7 @@ const CButton: React.FC<CButtonProps> = ({
                 type="submit"
                 className={classPrefix}
                 disabled={disabled}
-                style={{ cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}
+                style={buttonStyle}
             >
                 <div className="d-flex justify-content-between align-items-center w-100">
                     <span className="pe-2">{renderIcon()}</span>
@@ -69,7 +88,10 @@ const CButton: React.FC<CButtonProps> = ({
         <a
             href={link}
             className={classPrefix}
-            style={{ pointerEvents: disabled ? "none" : "auto", opacity: disabled ? 0.6 : 1 }}
+            style={{
+                ...buttonStyle,
+                pointerEvents: disabled ? "none" : "auto"
+            }}
         >
             <div className="d-flex justify-content-between align-items-center w-100">
                 <span className="pe-2">{renderIcon()}</span>

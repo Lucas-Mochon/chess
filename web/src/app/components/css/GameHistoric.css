@@ -1,0 +1,15 @@
+.game-historic-separator {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 0;
+    height: 0;
+}
+
+.games-lines {
+    align-items: "center";
+    min-height: "60px",
+}
+
+.games-lines:hover {
+    background-color: #3B3936;
+}
