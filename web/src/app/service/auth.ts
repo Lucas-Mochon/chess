@@ -43,7 +43,7 @@ async function connect(email: string, password: string): Promise<LoginResponse |
 
         if (res && res.token && res.data) {
             setCookie(TOKEN_KEY, res.token);
-            localStorage.setItem(USER, JSON.stringify(res.data));
+            localStorage.setItem(USER, JSON.stringify(res.data.Id));
             notifyAuthChange();
             window.location.href = '/';
         }
@@ -74,7 +74,6 @@ async function logout() {
 
 function isConnected() {
     const token = getCookie(TOKEN_KEY);
-    console.log("Token from cookie:", token);
     return !!token;
 }
 

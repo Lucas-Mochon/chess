@@ -6,10 +6,9 @@
 }
 
 .games-lines {
-    align-items: "center";
-    min-height: "60px",
+    transition: background-color 0.2s ease-in-out;
 }
 
 .games-lines:hover {
-    background-color: #3B3936;
+    background-color: #3b3936;
 }
