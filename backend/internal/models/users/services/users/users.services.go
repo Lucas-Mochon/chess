@@ -19,6 +19,10 @@ func (s *UserService) List() ([]models.Users, error) {
 	return s.Repo.List()
 }
 
+func (service *UserService) GetById(userId int) (*models.Users, error) {
+	return service.Repo.GetByID(userId)
+}
+
 func (s *UserService) Register(user usersDto.CreateUsersDTO) (models.Users, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -51,4 +55,8 @@ func (s *UserService) Login(user usersDto.UsersLoginDTO) (string, *models.Users,
 	}
 
 	return token, dbUser, nil
+}
+
+func (s *UserService) Edit(userID int, userData usersDto.EditUsersDTO) error {
+	return s.Repo.Edit(userID, userData)
 }

@@ -5,6 +5,7 @@ import (
 	usersDto "chesscom-copy/backend/internal/models/users/dto/users"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -14,7 +15,7 @@ type UserRepository struct {
 }
 
 func (r *UserRepository) List() ([]models.Users, error) {
-	rows, err := r.DB.Query("SELECT id, username, email FROM users")
+	rows, err := r.DB.Query("SELECT id, username, email, country, picture FROM users")
 	if err != nil {
 		return nil, err
 	}
@@ -23,12 +24,27 @@ func (r *UserRepository) List() ([]models.Users, error) {
 	var users []models.Users
 	for rows.Next() {
 		var u models.Users
-		if err := rows.Scan(&u.Id, &u.Username, &u.Email); err != nil {
+		if err := rows.Scan(&u.Id, &u.Username, &u.Email, &u.Country, &u.Picture); err != nil {
 			return nil, err
 		}
 		users = append(users, u)
 	}
 	return users, nil
+}
+
+func (repository *UserRepository) GetByID(userID int) (*models.Users, error) {
+	row := repository.DB.QueryRow("SELECT id, username, email, country, picture FROM users WHERE id = $1", userID)
+
+	var user models.Users
+	err := row.Scan(&user.Id, &user.Username, &user.Email, &user.Country, &user.Picture)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func (r *UserRepository) Register(user usersDto.CreateUsersDTO) (models.Users, error) {
@@ -65,4 +81,49 @@ func (r *UserRepository) Login(user usersDto.UsersLoginDTO) (*models.Users, erro
 	}
 
 	return &dbUser, nil
+}
+
+func (r *UserRepository) Edit(userID int, userData usersDto.EditUsersDTO) error {
+	setParts := []string{}
+	args := []interface{}{}
+	argIndex := 1
+
+	if userData.Username != "" {
+		setParts = append(setParts, fmt.Sprintf("username = $%d", argIndex))
+		args = append(args, userData.Username)
+		argIndex++
+	}
+
+	if userData.Email != "" {
+		setParts = append(setParts, fmt.Sprintf("email = $%d", argIndex))
+		args = append(args, userData.Email)
+		argIndex++
+	}
+
+	if len(userData.Picture) > 0 {
+		setParts = append(setParts, fmt.Sprintf("picture = $%d", argIndex))
+		args = append(args, userData.Picture)
+		argIndex++
+	}
+
+	if userData.Country != "" {
+		setParts = append(setParts, fmt.Sprintf("country = $%d", argIndex))
+		args = append(args, userData.Country)
+		argIndex++
+	}
+
+	if len(setParts) == 0 {
+		return fmt.Errorf("aucune donnée à mettre à jour")
+	}
+
+	query := fmt.Sprintf(`
+		UPDATE users
+		SET %s, updated_at = NOW()
+		WHERE id = $%d
+	`, strings.Join(setParts, ", "), argIndex)
+
+	args = append(args, userID)
+
+	_, err := r.DB.Exec(query, args...)
+	return err
 }

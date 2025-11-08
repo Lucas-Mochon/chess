@@ -1,0 +1,3 @@
+ALTER TABLE users
+ADD COLUMN picture BYTEA,
+ADD COLUMN country VARCHAR(50);

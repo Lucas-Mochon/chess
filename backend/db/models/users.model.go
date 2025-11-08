@@ -7,7 +7,8 @@ type Users struct {
 	Username     string    `db:"username"`
 	Email        string    `db:"email"`
 	PasswordHash string    `db:"password_hash"`
-	AvatarUrl    string    `db:"avatar_url"`
+	Picture      []byte    `db:"picture"`
+	Country      string    `db:"country"`
 	CreatedAt    time.Time `db:"created_at"`
 	UpdatedAt    time.Time `db:"updated_at"`
 }
