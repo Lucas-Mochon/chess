@@ -58,7 +58,6 @@ const GamePannel: React.FC<GamePannelProps> = ({ title, href }) => {
                 </div>
             </h2>
             <hr className="mt-0 mb-3" />
-
             {viewMode === "grid" ? (
                 <div className="row g-3">
                     {gamesProposed.map((game, index) => (
@@ -72,16 +71,15 @@ const GamePannel: React.FC<GamePannelProps> = ({ title, href }) => {
                                     />
                                     <div className="game-buttons text-white">
                                         <button className="btn-decline-defi">
-                                            <CustomIcon name="FiX" />
+                                            <CustomIcon name="FiX" color="white" />
                                         </button>
                                         <button className="btn-accept-defi">
-                                            <strong>Défi</strong>
+                                            <strong className="text-white">Défi</strong>
                                         </button>
                                     </div>
                                 </div>
-
-                                <div className="game-info text-white shadow rounded">
-                                    <strong className=" mb-1">Match recommandée</strong>
+                                <div className="game-info text-white p-2">
+                                    <strong className="mb-1">Match recommandée</strong>
                                     <div className="mb-1">
                                         <strong>{game.playerName}</strong> <span>({game.eloPlayer})</span>
                                     </div>
@@ -105,7 +103,7 @@ const GamePannel: React.FC<GamePannelProps> = ({ title, href }) => {
                                     className="game-image-small me-3"
                                     style={{ width: "80px", borderRadius: "4px" }}
                                 />
-                                <div className="game-info text-white">
+                                <div className="game-info-list text-white">
                                     <strong className="d-block">Match recommandée</strong>
                                     <div className="player-name">
                                         {game.playerName} <span className="text-white-50">({game.eloPlayer})</span>
@@ -120,14 +118,13 @@ const GamePannel: React.FC<GamePannelProps> = ({ title, href }) => {
                                     </div>
                                 </div>
                             </div>
-
                             <div className="list-buttons d-flex flex-row text-white">
                                 <button className="btn-decline-defi-line rounded p-2 mr-2">
-                                    <CustomIcon name="FiX" />
+                                    <CustomIcon name="FiX" color="white" />
                                 </button>
                                 <div className="pl-2 pr-2"></div>
                                 <button className="btn-accept-defi-line rounded p-2">
-                                    <strong>Défi</strong>
+                                    <strong className="text-white">Défi</strong>
                                 </button>
                             </div>
                         </div>

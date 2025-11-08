@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useThemedStyles } from '../../../hooks/useThemedStyles';
 import LogoButton from '../../../components/LogoButton';
 import CButton from '../../../components/CButton';
-import { useNavigate } from 'react-router-dom';
 import { authService } from '../../../service/auth';
 
 const LoginPage: React.FC = () => {
@@ -11,19 +10,40 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const themedStyles = useThemedStyles();
-    const navigate = useNavigate();
+
+    const isValidEmail = (email: string): boolean => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+
+        if (!email || !password) {
+            setError('Veuillez remplir tous les champs');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setError('Veuillez entrer une adresse email valide');
+            return;
+        }
+
+        if (password.length < 6) {
+            setError('Le mot de passe doit contenir au moins 6 caractères');
+            return;
+        }
+
         setLoading(true);
 
         try {
-            authService.connect(email, password)
-            navigate('/')
+            const response = await authService.connect(email, password);
+
+            if (!response) {
+                throw new Error('Échec de la connexion');
+            }
         } catch (err: any) {
             setError(
-                err.response?.data?.message ||
                 'Une erreur est survenue lors de la connexion'
             );
         } finally {
@@ -58,14 +78,15 @@ const LoginPage: React.FC = () => {
                 <form onSubmit={handleLogin}>
                     <div className="form-group mb-3 text-start">
                         <input
-                            type="text"
+                            type="email"
                             className="form-control bg-dark text-light border-0"
                             style={{
                                 background: '#403E3C'
                             }}
-                            placeholder="Username, Phone, or Email"
+                            placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
                     <div className="form-group mb-3 text-start">
@@ -75,6 +96,8 @@ const LoginPage: React.FC = () => {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            minLength={6}
+                            required
                         />
                     </div>
 
@@ -106,8 +129,6 @@ const LoginPage: React.FC = () => {
                     )}
 
                     <CButton type="submit" text={loading ? 'Loading...' : 'Log In'} disabled={loading}></CButton>
-
-
                 </form>
 
                 <hr className="border-secondary my-3 opacity-25" />

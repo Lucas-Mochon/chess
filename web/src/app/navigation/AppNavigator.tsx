@@ -55,12 +55,14 @@ const AppNavigator: React.FC = () => {
 
     useEffect(() => {
         checkAuthStatus();
-        window.addEventListener('storage', checkAuthStatus);
+
         window.addEventListener('authChange', checkAuthStatus);
 
+        const intervalId = setInterval(checkAuthStatus, 1000);
+
         return () => {
-            window.removeEventListener('storage', checkAuthStatus);
             window.removeEventListener('authChange', checkAuthStatus);
+            clearInterval(intervalId);
         };
     }, []);
 
