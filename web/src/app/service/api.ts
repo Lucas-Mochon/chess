@@ -1,14 +1,17 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { getCookie } from './cookie';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
 class ApiService {
     private api: AxiosInstance;
+    private token: string | null = null;
 
     constructor() {
+        this.token = getCookie('auth_token');
         this.api = axios.create({
             baseURL: apiUrl,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Authorization': this.token ? `Bearer ${this.token}` : undefined },
             withCredentials: true,
         });
     }
@@ -19,7 +22,6 @@ class ApiService {
     }
 
     public async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-        console.log('test')
         const response: AxiosResponse<T> = await this.api.post(url, data, config);
         return response.data;
     }

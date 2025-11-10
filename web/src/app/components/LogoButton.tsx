@@ -4,7 +4,7 @@ const LogoButton = () => {
             <img
                 src="assets/images/chess-com-logo.png"
                 alt="Logo"
-                style={{ height: '100px' }}
+                style={{ height: '50px' }}
             />
         </a>
     );

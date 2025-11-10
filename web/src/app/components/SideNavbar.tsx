@@ -3,6 +3,7 @@ import { mainMenu, subMenus } from '../utils/sideNavbarElements';
 import { useTheme } from '../contexts/ThemeContext';
 import * as MdIcons from 'react-icons/md';
 import LogoButton from './LogoButton';
+import CustomIcon from './CIcon';
 
 interface SideNavbarProps {
     onExpandChange?: (width: number) => void;
@@ -110,10 +111,11 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
                 }}
                 onMouseLeave={handleMouseLeave}
             >
-                <LogoButton />
                 <div className="flex-grow-1">
+                    <div className="m-2">
+                        <LogoButton />
+                    </div>
                     {mainMenu.map((item) => {
-                        const IconComponent = MdIcons[item.icon as keyof typeof MdIcons] as React.ComponentType<any>;
                         return (
                             <div
                                 key={item.key}
@@ -129,9 +131,20 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ onExpandChange }) => {
                                         }`}
                                     style={{ padding: '0.75rem' }}
                                 >
-                                    {IconComponent && <IconComponent size={24} className="text-white" />}
-                                    {(forceExpanded || isExpanded) && (
-                                        <span className="ms-2 text-white">{item.label}</span>
+                                    {item.image != null ? (
+                                        <span className="d-flex align-items-center text-white">
+                                            <img
+                                                src={item.image}
+                                                alt={item.label}
+                                                style={{ width: 30, height: 30 }}
+                                            />
+                                            <h4 className="ms-2">{item.label}</h4>
+                                        </span>
+                                    ) : (
+                                        <span className="d-flex align-items-center text-white">
+                                            <CustomIcon name={item.icon} size={30} />
+                                            <h4 className="ms-2">{item.label}</h4>
+                                        </span>
                                     )}
                                 </button>
                             </div>

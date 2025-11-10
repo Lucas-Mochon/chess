@@ -1,0 +1,17 @@
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.active-indicator {
+    font-size: 1.5rem;
+    color: #28a745;
+    animation: pulse 1s infinite;
+}

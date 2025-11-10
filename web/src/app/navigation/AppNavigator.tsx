@@ -8,6 +8,7 @@ import LoginPage from '../screens/user/connection/login';
 import Register from '../screens/user/connection/register';
 import Dashboard from '../screens/home/dashboard';
 import { authService } from '../service/auth';
+import GameScreen from '../screens/game';
 
 
 const withLayout = (Component: React.ComponentType<any>) => {
@@ -70,6 +71,7 @@ const AppNavigator: React.FC = () => {
         <Router>
             <Routes>
                 <Route path="/" element={isConnected ? withLayout(Dashboard)({}) : withLayout(GetStarted)({})} />
+                <Route path="/game" element={<ProtectedRoute element={withLayout(GameScreen)({})} />} />
                 <Route path="/connect" element={<PublicRoute element={withLayout(Connection)({})} />} />
                 <Route path="/login" element={<PublicRoute element={withLayout(LoginPage)({})} />} />
                 <Route path="/register" element={<PublicRoute element={withLayout(Register)({})} />} />

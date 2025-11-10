@@ -1,15 +1,16 @@
 export const mainMenu = [
-    { key: 'play', label: 'Jouer', icon: 'MdOutlineSportsEsports' },
-    { key: 'puzzles', label: 'Problèmes', icon: 'MdOutlineExtension' },
-    { key: 'learn', label: 'Apprendre', icon: 'MdOutlineSchool' },
-    { key: 'watch', label: 'Regarder', icon: 'MdOutlineOndemandVideo' },
-    { key: 'news', label: 'Infos', icon: 'MdOutlineNewspaper' },
-    { key: 'social', label: 'Social', icon: 'MdOutlineGroups' },
+    { key: 'play', label: 'Jouer', image: 'assets/images/sidebar-icons/pawn.png' },
+    { key: 'puzzles', label: 'Problèmes', image: 'assets/images/sidebar-icons/puzzle.png' },
+    { key: 'learn', label: 'Apprendre', image: 'assets/images/sidebar-icons/lessons.png' },
+    { key: 'watch', label: 'Regarder', image: 'assets/images/sidebar-icons/binocular.png' },
+    { key: 'news', label: 'Infos', image: 'assets/images/sidebar-icons/article.png' },
+    { key: 'social', label: 'Social', image: 'assets/images/sidebar-icons/friends.png' },
     { key: 'more', label: 'Plus', icon: 'MdMoreHoriz' },
 ];
 
-export const subMenus: Record<string, { label: string; icon: string }[]> = {
+export const subMenus: Record<string, { label: string; icon?: string, image?: string }[]> = {
     play: [
+        { label: 'Jouer', image: 'assets/images/sidebar-icons/pawn.png' },
         { label: 'Jouer contre des robots', icon: 'MdOutlineSmartToy' },
         { label: "Jouer avec l’entraîneur", icon: 'MdOutlinePerson' },
         { label: 'Tournois', icon: 'MdEmojiEvents' },
@@ -17,8 +18,9 @@ export const subMenus: Record<string, { label: string; icon: string }[]> = {
         { label: 'Historique des parties', icon: 'MdHistory' },
     ],
     puzzles: [
-        { label: 'Sprint de problèmes', icon: 'MdDirectionsRun' },
-        { label: 'Bataille de problèmes', icon: 'MdOutlineGavel' },
+        { label: 'Problèmes', image: 'assets/images/sidebar-icons/puzzle.png' },
+        { label: 'Sprint de problèmes', icon: 'MdDirectionsRun', image: 'assets/images/game-mode/problem-sprint.png' },
+        { label: 'Bataille de problèmes', icon: 'MdOutlineGavel', image: 'assets/images/game-mode/duel.png' },
         { label: 'Problème du jour', icon: 'MdOutlineCalendarToday' },
     ],
     learn: [
