@@ -1,7 +1,7 @@
-// components/game/Square.tsx
 import React from 'react';
 import { Piece } from '../../types/chess';
 import PieceComponent from './Piece';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface SquareProps {
     position: string;
@@ -43,13 +43,12 @@ const Square: React.FC<SquareProps> = ({
                 justifyContent: 'center',
                 backgroundColor: displayColor,
                 cursor: disabled ? 'not-allowed' : piece ? 'pointer' : 'default',
-                transition: 'background-color 0.2s ease',
-                border: isSelected ? '3px solid #7b7d0e' : 'none',
-                boxSizing: 'border-box',
+                border: isSelected ? '3px solid #7b7d0e' : '3px solid transparent',
                 width: '100%',
                 height: '100%',
                 position: 'relative',
                 opacity: disabled ? 0.7 : 1,
+                boxSizing: 'border-box',
             }}
             onClick={() => !disabled && onClick()}
             onMouseEnter={(e) => {
@@ -65,7 +64,6 @@ const Square: React.FC<SquareProps> = ({
         >
             {piece && <PieceComponent piece={piece} />}
 
-            {/* Indicateur de coup légal */}
             {isLegalMove && !piece && (
                 <div
                     style={{
@@ -78,7 +76,6 @@ const Square: React.FC<SquareProps> = ({
                 />
             )}
 
-            {/* Indicateur de capture */}
             {isLegalMove && piece && (
                 <div
                     style={{
@@ -92,7 +89,6 @@ const Square: React.FC<SquareProps> = ({
                 />
             )}
 
-            {/* Indicateur de check */}
             {isKingChecked && (
                 <div
                     style={{
@@ -101,17 +97,9 @@ const Square: React.FC<SquareProps> = ({
                         height: '100%',
                         border: '4px solid #ffff00',
                         boxSizing: 'border-box',
-                        animation: 'pulse 0.6s infinite',
                     }}
                 />
             )}
-
-            <style>{`
-                @keyframes pulse {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.5; }
-                }
-            `}</style>
         </div>
     );
 };

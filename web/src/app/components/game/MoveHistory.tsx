@@ -1,16 +1,26 @@
 import React from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
-import { Move } from '../../types/chess';
+import GameControls from './GameControls';
+import { useGame } from '../../contexts/GameContext';
 
-interface MoveHistoryProps {
-    moves: Move[];
-}
+const MoveHistory: React.FC = () => {
+    const { gameState, handleResign, handleDraw } = useGame();
+    const pairMoves = () => {
+        const pairs = [];
+        for (let i = 0; i < gameState.moves.length; i += 2) {
+            pairs.push({
+                white: gameState.moves[i],
+                black: i + 1 < gameState.moves.length ? gameState.moves[i + 1] : null,
+                moveNumber: Math.floor(i / 2) + 1
+            });
+        }
+        return pairs;
+    };
 
-const MoveHistory: React.FC<MoveHistoryProps> = ({ moves }) => {
     return (
         <Card className="border-0 bg-secondary bg-opacity-10 h-100">
-            <Card.Header className="bg-dark border-secondary">
-                <h5 className="mb-0 fw-bold">📋 Historique des coups</h5>
+            <Card.Header className="border-secondary">
+                <h5 className="mb-0 text-white">Historique des coups</h5>
             </Card.Header>
             <Card.Body
                 style={{
@@ -18,39 +28,43 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ moves }) => {
                     overflowY: 'auto',
                 }}
             >
-                {moves.length === 0 ? (
-                    <p className="text-muted text-center">Aucun coup joué</p>
+                {gameState.moves.length === 0 ? (
+                    <p className="text-white text-center">Aucun coup joué</p>
                 ) : (
-                    <Row className="g-2">
-                        {moves.map((move, index) => (
-                            <Col xs={6} key={index}>
-                                <div
-                                    className="p-2 bg-dark rounded text-center"
-                                    style={{
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#444c56';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#161b22';
-                                    }}
-                                >
-                                    <small className="text-muted">
-                                        {Math.floor(index / 2) + 1}.
-                                    </small>
+                    <div className="px-2">
+                        {pairMoves().map((pair, index) => (
+                            <Row key={index} className="mb-1 gx-3">
+                                <Col xs={1} className="text-white opacity-50 pe-0">
+                                    {pair.moveNumber}
+                                </Col>
+                                <Col xs={5} className="px-1">
                                     <div
-                                        className={`fw-bold ${index % 2 === 0 ? 'text-light' : 'text-warning'}`}
+                                        className="text-light fw-bold text-center"
+                                        style={{ cursor: 'pointer' }}
+                                        title={pair.white?.notation}
                                     >
-                                        {move.notation}
+                                        {pair.white?.notation}
                                     </div>
-                                </div>
-                            </Col>
+                                </Col>
+                                <Col xs={5} className="px-1">
+                                    {pair.black && (
+                                        <div
+                                            className="text-warning fw-bold text-center"
+                                            style={{ cursor: 'pointer' }}
+                                            title={pair.black?.notation}
+                                        >
+                                            {pair.black?.notation}
+                                        </div>
+                                    )}
+                                </Col>
+                            </Row>
                         ))}
-                    </Row>
+                    </div>
                 )}
             </Card.Body>
+            <Card.Footer>
+                <GameControls handleNull={handleDraw} handleResign={handleResign} />
+            </Card.Footer>
         </Card>
     );
 };

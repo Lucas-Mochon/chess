@@ -1,27 +1,20 @@
-// components/game/Board.tsx
 import React, { useState, useMemo, useEffect } from 'react';
 import { Piece, Color, PieceType } from '../../types/chess';
 import { ChessRules } from '../../utils/chessRules';
 import Square from './Square';
 import PromotionModal from './PromotionModal';
+import { useGame } from '../../contexts/GameContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/Board.css';
 
 interface BoardProps {
-    selectedSquare: string | null;
-    onSquareClick: (position: string | null) => void;
-    onMove: (from: string, to: string, promotedTo?: PieceType) => void;
-    currentTurn: Color;
     onCheckChange?: (isCheck: boolean, checkColor?: Color) => void;
     onGameEnd?: (status: 'checkmate' | 'stalemate', winner?: Color) => void;
 }
 
-const Board: React.FC<BoardProps> = ({
-    selectedSquare,
-    onSquareClick,
-    onMove,
-    currentTurn,
-    onCheckChange,
-    onGameEnd,
-}) => {
+const Board: React.FC<BoardProps> = ({ onCheckChange, onGameEnd }) => {
+    const { gameState, handleSquareClick, handleMove, handleCheckChange, handleGameEnd } = useGame();
+
     const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
 
@@ -65,107 +58,60 @@ const Board: React.FC<BoardProps> = ({
         to: string;
     } | null>(null);
 
-    // Calculer les coups légaux pour la case sélectionnée
     const legalMoves = useMemo(() => {
-        if (!selectedSquare) return [];
-        const piece = pieces[selectedSquare];
+        if (!gameState.selectedSquare) return [];
+        const piece = pieces[gameState.selectedSquare];
         if (!piece) return [];
         return ChessRules.getLegalMoves(
-            selectedSquare,
+            gameState.selectedSquare,
             piece,
             pieces,
-            currentTurn
+            gameState.currentTurn
         );
-    }, [selectedSquare, pieces, currentTurn]);
+    }, [gameState.selectedSquare, pieces, gameState.currentTurn]);
 
-    // Vérifier check et checkmate après chaque mouvement
     useEffect(() => {
-        const isCheck = ChessRules.isKingInCheck(currentTurn, pieces);
-        const isCheckmate = ChessRules.isCheckmate(currentTurn, pieces);
-        const isStalemate = ChessRules.isStalemate(currentTurn, pieces);
+        const isCheck = ChessRules.isKingInCheck(gameState.currentTurn, pieces);
+        const isCheckmate = ChessRules.isCheckmate(gameState.currentTurn, pieces);
+        const isStalemate = ChessRules.isStalemate(gameState.currentTurn, pieces);
 
         if (onCheckChange) {
-            onCheckChange(isCheck, isCheck ? currentTurn : undefined);
+            onCheckChange(isCheck, isCheck ? gameState.currentTurn : undefined);
         }
 
         if (onGameEnd) {
             if (isCheckmate) {
-                const winner = currentTurn === 'white' ? 'black' : 'white';
+                const winner = gameState.currentTurn === 'white' ? 'black' : 'white';
                 onGameEnd('checkmate', winner);
             } else if (isStalemate) {
                 onGameEnd('stalemate');
             }
         }
-    }, [pieces, currentTurn, onCheckChange, onGameEnd]);
 
-    const handleSquareClick = (position: string) => {
-        if (promotionPending) return;
-
-        // Si on clique sur la même case, on désélectionne
-        if (selectedSquare === position) {
-            onSquareClick(null);
-            return;
+        handleCheckChange(isCheck, isCheck ? gameState.currentTurn : undefined);
+        if (isCheckmate) {
+            const winner = gameState.currentTurn === 'white' ? 'black' : 'white';
+            handleGameEnd('checkmate', winner);
+        } else if (isStalemate) {
+            handleGameEnd('stalemate');
         }
-
-        // Si une case est déjà sélectionnée, on essaie de faire le mouvement
-        if (selectedSquare) {
-            if (legalMoves.includes(position)) {
-                handleMove(selectedSquare, position);
-            } else {
-                // Sinon, on sélectionne la nouvelle case si elle contient une pièce du joueur actuel
-                const piece = pieces[position];
-                if (piece && piece.color === currentTurn) {
-                    onSquareClick(position);
-                } else {
-                    onSquareClick(null);
-                }
-            }
-            return;
-        }
-
-        // Sinon, on sélectionne la case (si elle contient une pièce du joueur actuel)
-        const piece = pieces[position];
-        if (piece && piece.color === currentTurn) {
-            onSquareClick(position);
-        }
-    };
-
-    const handleMove = (from: string, to: string) => {
-        const piece = pieces[from];
-
-        if (!piece) {
-            onSquareClick(null);
-            return;
-        }
-
-        // Vérifier que le coup est légal
-        if (!legalMoves.includes(to)) {
-            onSquareClick(null);
-            return;
-        }
-
-        // Vérifier si c'est une promotion
-        if (ChessRules.shouldPromote(to, piece)) {
-            setPromotionPending({ from, to });
-            return;
-        }
-
-        // Effectuer le mouvement
-        performMove(from, to);
-    };
+    }, [pieces, gameState.currentTurn, onCheckChange, onGameEnd, handleCheckChange, handleGameEnd]);
 
     const performMove = (from: string, to: string, promotedTo?: PieceType) => {
         const piece = pieces[from];
 
         if (!piece) {
-            onSquareClick(null);
+            handleSquareClick(null);
             return;
         }
 
-        // Créer une copie de l'état des pièces
+        if (!promotedTo && ChessRules.shouldPromote(to, piece)) {
+            setPromotionPending({ from, to });
+            return;
+        }
+
         const newPieces = { ...pieces };
 
-        // Si c'est une promotion, remplacer le pion par la pièce promue
         if (promotedTo) {
             newPieces[to] = { type: promotedTo, color: piece.color };
         } else {
@@ -174,15 +120,39 @@ const Board: React.FC<BoardProps> = ({
 
         newPieces[from] = null;
 
-        // Mettre à jour l'état
         setPieces(newPieces);
+        handleMove(from, to, promotedTo);
 
-        // Appeler le callback du parent
-        onMove(from, to, promotedTo);
-
-        // Désélectionner et fermer la modal
-        onSquareClick(null);
+        handleSquareClick(null);
         setPromotionPending(null);
+    };
+
+    const onSquareClick = (position: string) => {
+        if (promotionPending) return;
+
+        if (gameState.selectedSquare === position) {
+            handleSquareClick(null);
+            return;
+        }
+
+        if (gameState.selectedSquare) {
+            if (legalMoves.includes(position)) {
+                performMove(gameState.selectedSquare, position);
+            } else {
+                const piece = pieces[position];
+                if (piece && piece.color === gameState.currentTurn) {
+                    handleSquareClick(position);
+                } else {
+                    handleSquareClick(null);
+                }
+            }
+            return;
+        }
+
+        const piece = pieces[position];
+        if (piece && piece.color === gameState.currentTurn) {
+            handleSquareClick(position);
+        }
     };
 
     const handlePromotionSelect = (pieceType: PieceType) => {
@@ -190,33 +160,26 @@ const Board: React.FC<BoardProps> = ({
         performMove(promotionPending.from, promotionPending.to, pieceType);
     };
 
-    const kingPosition = ChessRules.findKing(currentTurn, pieces);
-    const isKingInCheck = ChessRules.isKingInCheck(currentTurn, pieces);
+    const kingPosition = ChessRules.findKing(gameState.currentTurn, pieces);
+    const isKingInCheck = ChessRules.isKingInCheck(gameState.currentTurn, pieces);
+
+    const boxShadowStyle = isKingInCheck
+        ? '0 0 30px rgba(255, 0, 0, 0.8)'
+        : '0 0 20px rgba(0, 0, 0, 0.5)';
 
     return (
-        <>
+        <div className="d-flex justify-content-center align-items-center">
             {promotionPending && (
                 <PromotionModal
-                    color={currentTurn}
+                    color={gameState.currentTurn}
                     onSelect={handlePromotionSelect}
                 />
             )}
 
             <div
+                className="board-container"
                 style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(8, 1fr)',
-                    gridTemplateRows: 'repeat(8, 1fr)',
-                    gap: 0,
-                    width: '100%',
-                    maxWidth: '600px',
-                    aspectRatio: '1 / 1',
-                    border: '3px solid #444c56',
-                    boxShadow: isKingInCheck
-                        ? '0 0 30px rgba(255, 0, 0, 0.8)'
-                        : '0 0 20px rgba(0, 0, 0, 0.5)',
-                    margin: '0 auto',
-                    transition: 'box-shadow 0.3s ease',
+                    boxShadow: boxShadowStyle,
                     opacity: promotionPending ? 0.5 : 1,
                 }}
             >
@@ -224,7 +187,7 @@ const Board: React.FC<BoardProps> = ({
                     files.map((file) => {
                         const position = `${file}${rank}`;
                         const isLight = (file.charCodeAt(0) + rank) % 2 === 0;
-                        const isSelected = selectedSquare === position;
+                        const isSelected = gameState.selectedSquare === position;
                         const isLegalMove = legalMoves.includes(position);
                         const piece = pieces[position];
                         const isKingChecked =
@@ -239,14 +202,14 @@ const Board: React.FC<BoardProps> = ({
                                 isSelected={isSelected}
                                 isLegalMove={isLegalMove}
                                 isKingChecked={isKingChecked}
-                                onClick={() => handleSquareClick(position)}
+                                onClick={() => onSquareClick(position)}
                                 disabled={!!promotionPending}
                             />
                         );
                     })
                 )}
             </div>
-        </>
+        </div>
     );
 };
 

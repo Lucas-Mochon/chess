@@ -13,6 +13,7 @@ interface CButtonProps {
     type?: "button" | "submit";
     disabled?: boolean;
     size?: "normal" | "large";
+    textCenter?: boolean;
 }
 
 const CButton: React.FC<CButtonProps> = ({
@@ -26,17 +27,15 @@ const CButton: React.FC<CButtonProps> = ({
     type,
     disabled = false,
     size = "normal",
+    textCenter = false,
 }) => {
-    let classPrefix = "text-decoration-none d-inline-block text-center position-relative w-100";
+    let classPrefix = "text-decoration-none d-inline-block position-relative w-100";
 
-    // Ajout de classes en fonction de la taille
-    if (size === "large") {
+    if (size === "large")
         classPrefix += " custom-btn-large";
-    } else {
+    else
         classPrefix += " btn-lg p-2 m-1";
-    }
 
-    // Ajout de classes en fonction de la couleur
     if (color === "black") classPrefix += " custom-btn-black";
     if (color === "green" || color === undefined) classPrefix += " custom-btn-green";
     if (disabled) classPrefix += " disabled";
@@ -68,6 +67,14 @@ const CButton: React.FC<CButtonProps> = ({
         padding: size === "large" ? "16px 20px" : undefined
     };
 
+    const contentClasses = textCenter
+        ? "d-flex justify-content-center align-items-center w-100"
+        : "d-flex justify-content-between align-items-center w-100";
+
+    const textClasses = textCenter
+        ? "text-center"
+        : "flex-grow-1 text-start ps-2";
+
     if (type === "submit") {
         return (
             <button
@@ -76,9 +83,9 @@ const CButton: React.FC<CButtonProps> = ({
                 disabled={disabled}
                 style={buttonStyle}
             >
-                <div className="d-flex justify-content-between align-items-center w-100">
-                    <span className="pe-2">{renderIcon()}</span>
-                    <span className="flex-grow-1 text-start ps-2">{text}</span>
+                <div className={contentClasses}>
+                    {(logo || icon) && <span className={textCenter ? "me-2" : "pe-2"}>{renderIcon()}</span>}
+                    <span className={textClasses}>{text}</span>
                 </div>
             </button>
         );
@@ -93,9 +100,9 @@ const CButton: React.FC<CButtonProps> = ({
                 pointerEvents: disabled ? "none" : "auto"
             }}
         >
-            <div className="d-flex justify-content-between align-items-center w-100">
-                <span className="pe-2">{renderIcon()}</span>
-                <span className="flex-grow-1 text-start ps-2">{text}</span>
+            <div className={contentClasses}>
+                {(logo || icon) && <span className={textCenter ? "me-2" : "pe-2"}>{renderIcon()}</span>}
+                <span className={textClasses}>{text}</span>
             </div>
         </a>
     );
