@@ -15,7 +15,7 @@ interface PlayerCardProps {
 const PlayerCard: React.FC<PlayerCardProps> = ({ player, gameState, playerColor }) => {
     return (
         <div className="d-flex align-items-center flex-row justify-content-between p-2">
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center gap-1">
                 <img
                     src={player.avatar ? player.avatar : '/assets/images/default-avatar.png'}
                     alt={player.username}

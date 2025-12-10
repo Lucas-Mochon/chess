@@ -1,20 +1,38 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { GameState, Move, Color, PieceType } from '../types/chess';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import { GameState, Move, Color, PieceType, EndGameReason } from '../types/chess';
+
+type GameStatus =
+    | 'searching'
+    | 'playing'
+    | 'nullProposed'
+    | 'draw'
+    | 'checkmate'
+    | 'stalemate'
+    | 'resigned'
+    | 'timeout';
 
 interface GameContextType {
     gameState: GameState;
-
     handleSquareClick: (position: string | null) => void;
     handleMove: (from: string, to: string, promotedTo?: PieceType) => void;
     handleCheckChange: (isCheck: boolean, checkColor?: Color) => void;
     handleGameEnd: (status: 'checkmate' | 'stalemate', winner?: Color) => void;
-    handleResign: () => void;
-    handleDraw: () => void;
+    handleResign: (resigner?: Color) => void;
+    handleDraw: (reason?: EndGameReason) => void;
+    setStatus: (status: GameStatus) => void;
+    setEndGame: (endGame: boolean) => void;
     getEndReason: () => string;
     getColorOfConnectedPlayer: () => Color;
-    getNameOfWinner: () => string;
-    getOpenModalState: () => boolean;
-    setOpenModalState: () => void;
+    getNameOfWinner: () => string | null;
+    getOpenModalEndGameState: () => boolean;
+    openModalEndGame: () => void;
+    closeModalEndGame: () => void;
+    getOpenModalNullState: () => boolean;
+    openModalNull: () => void;
+    closeModalNull: () => void;
+    getOpenModalSearchState: () => boolean;
+    openModalSearch: () => void;
+    closeModalSearch: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -50,7 +68,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
         moves: [],
         currentTurn: 'white',
-        status: 'playing',
+        status: 'searching' as GameStatus,
         time: {
             timeWhite: 600,
             timeBlack: 600,
@@ -85,24 +103,41 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 blawlack: 0,
                 mistake: 0,
                 blunder: 0,
-            }
-        }
+            },
+        },
     });
 
-    useEffect(() => {
-        if (gameState.status !== 'playing') return;
+    const [isModalEndGameOpen, setIsModalEndGameOpen] = useState<boolean>(false);
+    const [isModalNullOpen, setIsModalNullOpen] = useState<boolean>(false);
+    const [isModalSearchOpen, setIsModalSearchOpen] = useState<boolean>(false);
+    const timerRef = useRef<number | null>(null);
 
-        const interval = setInterval(() => {
+    useEffect(() => {
+        if (gameState.status !== 'playing' && gameState.status !== 'nullProposed') {
+            if (timerRef.current) {
+                window.clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+            return;
+        }
+
+        if (timerRef.current) return;
+
+        timerRef.current = window.setInterval(() => {
             setGameState((prev) => {
                 if (prev.status !== 'playing') return prev;
 
                 const timeKey = prev.currentTurn === 'white' ? 'timeWhite' : 'timeBlack';
-                const newTime = prev.time[timeKey] - 1;
+                const remaining = (prev.time as any)[timeKey] - 1;
 
-                if (newTime <= 0) {
+                if (remaining <= 0) {
+                    const winner: Color = prev.currentTurn === 'white' ? 'black' : 'white';
                     return {
                         ...prev,
-                        status: 'timeout',
+                        status: 'timeout' as GameStatus,
+                        endGame: true,
+                        endGameReason: 'timeout',
+                        winner,
                         time: {
                             ...prev.time,
                             [timeKey]: 0,
@@ -114,14 +149,19 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     ...prev,
                     time: {
                         ...prev.time,
-                        [timeKey]: newTime,
+                        [timeKey]: remaining,
                     },
                 };
             });
         }, 1000);
 
-        return () => clearInterval(interval);
-    }, [gameState.status]);
+        return () => {
+            if (timerRef.current) {
+                window.clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        };
+    }, [gameState.status, gameState.currentTurn]);
 
     const handleSquareClick = useCallback((position: string | null) => {
         setGameState((prev) => ({
@@ -160,26 +200,51 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         (status: 'checkmate' | 'stalemate', winner?: Color) => {
             setGameState((prev) => ({
                 ...prev,
-                status: status,
+                status: status === 'checkmate' ? 'checkmate' : 'stalemate',
                 endGame: true,
                 endGameReason: status,
                 winner: winner,
             }));
+            setIsModalEndGameOpen(true);
         },
         []
     );
 
-    const handleResign = useCallback(() => {
-        setGameState((prev) => ({
-            ...prev,
-            status: 'resigned',
-        }));
+    const handleResign = useCallback((resigner?: Color) => {
+        setGameState((prev) => {
+            const winner = resigner === 'white' ? 'black' : 'white';
+            return {
+                ...prev,
+                status: 'resigned' as GameStatus,
+                endGame: true,
+                endGameReason: 'resignation',
+                winner,
+            };
+        });
+        setIsModalEndGameOpen(true);
     }, []);
 
-    const handleDraw = useCallback(() => {
+    const handleDraw = useCallback((reason: EndGameReason = 'draw') => {
         setGameState((prev) => ({
             ...prev,
-            status: 'draw',
+            status: 'draw' as GameStatus,
+            endGame: true,
+            endGameReason: reason,
+        }));
+        setIsModalEndGameOpen(true);
+    }, []);
+
+    const setStatus = useCallback((status: GameStatus) => {
+        setGameState(prev => ({
+            ...prev,
+            status,
+        }));
+    }, [setGameState]);
+
+    const setEndGame = useCallback((value: boolean) => {
+        setGameState(prev => ({
+            ...prev,
+            endGame: value
         }));
     }, []);
 
@@ -190,7 +255,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
             case 'resignation': return 'par démission';
             case 'draw': return 'par partie nulle';
             case 'timeout': return 'par dépassement de temps';
-            default: return '';
+            default:
+                if (typeof gameState.endGameReason === 'string' && gameState.endGameReason === 'draw') {
+                    return 'par partie nulle';
+                }
+                return '';
         }
     }
 
@@ -199,19 +268,38 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     function getNameOfWinner() {
-        return gameState.winner ? gameState[gameState.winner].username : '';
+        return gameState.winner ? gameState[gameState.winner].username : null;
     }
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    function getOpenModalState() {
-        return isModalOpen;
+    function getOpenModalEndGameState() {
+        return isModalEndGameOpen;
+    }
+    function openModalEndGame() {
+        setIsModalEndGameOpen(true);
+    }
+    function closeModalEndGame() {
+        setIsModalEndGameOpen(false);
     }
 
-    function setOpenModalState() {
-        setIsModalOpen(!isModalOpen);
+    function getOpenModalNullState() {
+        return isModalNullOpen;
+    }
+    function openModalNull() {
+        setIsModalNullOpen(true);
+    }
+    function closeModalNull() {
+        setIsModalNullOpen(false);
     }
 
+    function getOpenModalSearchState() {
+        return isModalSearchOpen;
+    }
+    function openModalSearch() {
+        setIsModalSearchOpen(true);
+    }
+    function closeModalSearch() {
+        setIsModalSearchOpen(false);
+    }
 
     const value: GameContextType = {
         gameState,
@@ -221,11 +309,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         handleGameEnd,
         handleResign,
         handleDraw,
+        setStatus,
+        setEndGame,
         getEndReason,
         getColorOfConnectedPlayer,
         getNameOfWinner,
-        getOpenModalState,
-        setOpenModalState,
+        getOpenModalEndGameState,
+        openModalEndGame,
+        closeModalEndGame,
+        getOpenModalNullState,
+        openModalNull,
+        closeModalNull,
+        getOpenModalSearchState,
+        openModalSearch,
+        closeModalSearch,
     };
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

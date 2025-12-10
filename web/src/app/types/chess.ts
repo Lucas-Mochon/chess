@@ -1,6 +1,6 @@
 export type Color = 'white' | 'black';
 export type PieceType = 'pawn' | 'rook' | 'knight' | 'bishop' | 'queen' | 'king';
-export type GameStatus = 'playing' | 'check' | 'checkmate' | 'stalemate' | 'resigned' | 'draw' | 'timeout';
+export type GameStatus = 'playing' | 'check' | 'checkmate' | 'stalemate' | 'resigned' | 'draw' | 'timeout' | 'nullProposed' | 'searching';
 export type EndGameReason = 'checkmate' | 'stalemate' | 'resignation' | 'draw' | 'timeout';
 
 export interface Piece {

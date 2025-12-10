@@ -3,8 +3,13 @@ import { Card, Row, Col } from 'react-bootstrap';
 import GameControls from './GameControls';
 import { useGame } from '../../contexts/GameContext';
 
-const MoveHistory: React.FC = () => {
-    const { gameState, handleResign, handleDraw } = useGame();
+interface MoveHistoryProps {
+    handleResign: () => void;
+}
+
+const MoveHistory: React.FC<MoveHistoryProps> = ({ handleResign }) => {
+    const { gameState, setStatus, openModalNull } = useGame();
+
     const pairMoves = () => {
         const pairs = [];
         for (let i = 0; i < gameState.moves.length; i += 2) {
@@ -15,6 +20,11 @@ const MoveHistory: React.FC = () => {
             });
         }
         return pairs;
+    };
+
+    const proposeNull = () => {
+        setStatus('nullProposed');
+        openModalNull();
     };
 
     return (
@@ -63,7 +73,7 @@ const MoveHistory: React.FC = () => {
                 )}
             </Card.Body>
             <Card.Footer>
-                <GameControls handleNull={handleDraw} handleResign={handleResign} />
+                <GameControls handleNull={proposeNull} handleResign={handleResign} />
             </Card.Footer>
         </Card>
     );

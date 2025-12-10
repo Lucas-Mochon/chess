@@ -6,11 +6,12 @@ import { statsOrder } from '../../contexts/GameContext';
 import CButton from '../CButton';
 
 const ModalEndGame: React.FC = () => {
-    const { gameState, getColorOfConnectedPlayer, getEndReason, getNameOfWinner, getOpenModalState, setOpenModalState } = useGame();
+    const { gameState, getColorOfConnectedPlayer, getEndReason, getNameOfWinner, getOpenModalEndGameState, closeModalEndGame } = useGame();
 
-    if (!gameState.endGame || getOpenModalState()) return null;
+    if (!gameState.endGame || !getOpenModalEndGameState()) return null;
 
-    const winnerName = getNameOfWinner();
+    let winnerName = getNameOfWinner();
+    winnerName = winnerName ? winnerName + "a gagné" : 'Partie nulle';
 
     function getStatsCount() {
         const color = getColorOfConnectedPlayer();
@@ -32,7 +33,7 @@ const ModalEndGame: React.FC = () => {
             <div className="card shadow border-0 rounded-4 overflow-hidden" style={{ maxWidth: "350px" }}>
                 <div className="card-header border-0 py-3 px-4 position-relative" style={{ backgroundColor: "#3C3A38" }}>
                     <button
-                        onClick={setOpenModalState}
+                        onClick={closeModalEndGame}
                         className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
                         aria-label="Close"
                         style={{ width: '20px', height: '20px' }}
@@ -40,7 +41,7 @@ const ModalEndGame: React.FC = () => {
 
                     <div className="pe-4">
                         <h2 className="mb-2 fw-bold text-white" style={{ fontSize: '1.25rem' }}>
-                            {winnerName} a gagné
+                            {winnerName}
                         </h2>
                         <div className="text-white-50" style={{ fontSize: '0.875rem' }}>
                             {getEndReason()}
