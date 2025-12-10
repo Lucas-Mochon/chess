@@ -13,7 +13,6 @@ const GameScreenContent: React.FC = () => {
         gameState,
         handleCheckChange,
         handleGameEnd,
-        handleDraw,
         handleResign,
         getOpenModalEndGameState,
         openModalSearch
