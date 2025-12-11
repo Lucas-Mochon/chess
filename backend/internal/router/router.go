@@ -47,6 +47,7 @@ func SetupRouter(controllers *initiator.Controllers) *gin.Engine {
 			controllers.Games.GameMovesController,
 			controllers.Games.GameModeController,
 			controllers.Games.GameModeGroupController,
+			controllers.Games.MatchmakingController,
 		)
 
 	}

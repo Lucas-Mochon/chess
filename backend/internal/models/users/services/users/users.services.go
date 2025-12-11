@@ -19,7 +19,7 @@ func (s *UserService) List() ([]models.Users, error) {
 	return s.Repo.List()
 }
 
-func (service *UserService) GetById(userId int) (*models.Users, error) {
+func (service *UserService) GetById(userId int) (models.Users, error) {
 	return service.Repo.GetByID(userId)
 }
 

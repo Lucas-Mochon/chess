@@ -51,12 +51,12 @@ func (controller *GamesController) Create(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	if err := controller.Service.Create(input); err != nil {
+	var game, err = controller.Service.Create(input)
+	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	context.JSON(http.StatusCreated, gin.H{"message": "Partie créée avec succès"})
+	context.JSON(http.StatusOK, game)
 }
 
 func (controller *GamesController) Finish(context *gin.Context) {

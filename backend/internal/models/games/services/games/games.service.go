@@ -1,6 +1,7 @@
 package gamesService
 
 import (
+	"chesscom-copy/backend/db/models"
 	gamesDto "chesscom-copy/backend/internal/models/games/dto/games"
 	"chesscom-copy/backend/internal/models/games/repository/gameModesRepository"
 	gamesRepository "chesscom-copy/backend/internal/models/games/repository/games"
@@ -19,7 +20,7 @@ func (service *GamesService) GetById(gameId int) (gamesDto.GameRow, error) {
 	return service.Repo.GetById(gameId)
 }
 
-func (service *GamesService) Create(game gamesDto.CreateGamesDTO) error {
+func (service *GamesService) Create(game gamesDto.CreateGamesDTO) (models.Games, error) {
 	return service.Repo.Create(game)
 }
 

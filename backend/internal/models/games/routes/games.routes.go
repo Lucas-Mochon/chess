@@ -6,6 +6,7 @@ import (
 	"chesscom-copy/backend/internal/models/games/controllers/gameModesController.go"
 	gameMovesController "chesscom-copy/backend/internal/models/games/controllers/gameMoves"
 	gamesController "chesscom-copy/backend/internal/models/games/controllers/games"
+	matchmakingController "chesscom-copy/backend/internal/models/games/controllers/matchmaking"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +15,8 @@ func RegisterGamesRoutes(rg *gin.RouterGroup,
 	controllerGames *gamesController.GamesController,
 	controllerGameMoves *gameMovesController.GameMovesController,
 	controllerGameModes *gameModesController.GameModesController,
-	controllerGameModeGroups *gameModeGroupsController.GameModeGroupsController) {
+	controllerGameModeGroups *gameModeGroupsController.GameModeGroupsController,
+	controllerMatchmaking *matchmakingController.MatchmakingController) {
 
 	GamesGroup := rg.Group("/games")
 	{
@@ -41,6 +43,11 @@ func RegisterGamesRoutes(rg *gin.RouterGroup,
 				GameModeGroups.GET("/", middlewares.JWTMiddleware(), controllerGameModeGroups.List)
 				GameModeGroups.POST("/create", middlewares.JWTMiddleware(), controllerGameModeGroups.Create)
 			}
+		}
+
+		Matchmaking := GamesGroup.Group("/matchmaking")
+		{
+			Matchmaking.GET("/matchmaking/join", controllerMatchmaking.JoinQueue)
 		}
 	}
 }

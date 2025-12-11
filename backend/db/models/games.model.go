@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Games struct {
-	Id              string    `db:"id"`
+	Id              int       `db:"id"`
 	WhitePlayerId   int       `db:"white_player_id"`
 	BlackPlayerId   int       `db:"black_player_id"`
 	Result          string    `db:"result"`

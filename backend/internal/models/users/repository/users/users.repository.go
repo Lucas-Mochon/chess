@@ -32,19 +32,22 @@ func (r *UserRepository) List() ([]models.Users, error) {
 	return users, nil
 }
 
-func (repository *UserRepository) GetByID(userID int) (*models.Users, error) {
-	row := repository.DB.QueryRow("SELECT id, username, email, country, picture FROM users WHERE id = $1", userID)
+func (repository *UserRepository) GetByID(userID int) (models.Users, error) {
+	row := repository.DB.QueryRow(
+		"SELECT id, username, email, country, picture FROM users WHERE id = $1",
+		userID,
+	)
 
 	var user models.Users
 	err := row.Scan(&user.Id, &user.Username, &user.Email, &user.Country, &user.Picture)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return models.Users{}, nil
 		}
-		return nil, err
+		return models.Users{}, err
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (r *UserRepository) Register(user usersDto.CreateUsersDTO) (models.Users, error) {
