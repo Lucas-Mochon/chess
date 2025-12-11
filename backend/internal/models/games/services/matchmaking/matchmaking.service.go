@@ -55,3 +55,22 @@ func (service *MatchmakingService) JoinQueue(player models.Users, gameModeId int
 
 	return gameInfo, nil
 }
+
+func (service *MatchmakingService) GetPlayerQueueStatus(userId int) (string, *gamesDto.GameInformationResponse, error) {
+
+	gameIdPtr, err := service.GamesRepo.GetActiveGameByPlayer(userId)
+	if err != nil {
+		return "", nil, err
+	}
+
+	if gameIdPtr == nil {
+		return "waiting", nil, nil
+	}
+
+	gameInfo, err := service.GamesRepo.GetOneGame(*gameIdPtr)
+	if err != nil {
+		return "", nil, err
+	}
+
+	return "matched", &gameInfo, nil
+}

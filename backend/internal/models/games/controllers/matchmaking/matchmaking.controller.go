@@ -67,3 +67,35 @@ func (ctrl *MatchmakingController) JoinQueue(c *gin.Context) {
 		"game":   gameInfo,
 	})
 }
+
+func (ctrl *MatchmakingController) GetPlayerQueueStatus(c *gin.Context) {
+	playerIdStr := c.Param("userId")
+	if playerIdStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "userId is required"})
+		return
+	}
+
+	playerId, err := strconv.Atoi(playerIdStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid playerId"})
+		return
+	}
+
+	status, gameInfo, err := ctrl.Service.GetPlayerQueueStatus(playerId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if status == "waiting" {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "player added to queue",
+			"status":  status,
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"game":   gameInfo,
+			"status": status,
+		})
+	}
+}

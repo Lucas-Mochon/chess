@@ -196,3 +196,24 @@ func (repository *GamesRepository) GetOneGame(id int) (gamesDto.GameInformationR
 
 	return g, nil
 }
+
+func (repository *GamesRepository) GetActiveGameByPlayer(userId int) (*int, error) {
+	row := repository.DB.QueryRow(`
+        SELECT id
+        FROM games
+        WHERE (white_player_id = $1 OR black_player_id = $1) AND result = 'playing'
+        ORDER BY started_at DESC
+        LIMIT 1
+    `, userId)
+
+	var gameId int
+	err := row.Scan(&gameId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &gameId, nil
+}
