@@ -8,7 +8,7 @@ type Users struct {
 	Email        string    `db:"email"`
 	PasswordHash string    `db:"password_hash"`
 	Picture      []byte    `db:"picture"`
-	Country      string    `db:"country"`
+	Country      *string   `db:"country"`
 	CreatedAt    time.Time `db:"created_at"`
 	UpdatedAt    time.Time `db:"updated_at"`
 }

@@ -10,7 +10,7 @@ import (
 
 type MatchmakingService struct {
 	Repo      *mathchmakingRepository.MatchmakingRepository
-	gamesRepo *gamesRepository.GamesRepository
+	GamesRepo *gamesRepository.GamesRepository
 }
 
 func (service *MatchmakingService) JoinQueue(player models.Users, gameModeId int) (gamesDto.GameInformationResponse, error) {
@@ -41,14 +41,14 @@ func (service *MatchmakingService) JoinQueue(player models.Users, gameModeId int
 		}
 	}
 
-	createdGame, err := service.gamesRepo.Create(game)
+	createdGame, err := service.GamesRepo.Create(game)
 	if err != nil {
 		return gamesDto.GameInformationResponse{}, err
 	}
 
 	id := createdGame.Id
 
-	gameInfo, err := service.gamesRepo.GetOneGame(id)
+	gameInfo, err := service.GamesRepo.GetOneGame(id)
 	if err != nil {
 		return gamesDto.GameInformationResponse{}, err
 	}

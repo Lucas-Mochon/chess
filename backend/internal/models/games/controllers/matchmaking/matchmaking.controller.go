@@ -2,7 +2,7 @@ package matchmakingController
 
 import (
 	mathchmakingService "chesscom-copy/backend/internal/models/games/services/matchmaking"
-	usersRepository "chesscom-copy/backend/internal/models/users/repository/users"
+	usersService "chesscom-copy/backend/internal/models/users/services/users"
 	"net/http"
 	"strconv"
 
@@ -10,23 +10,23 @@ import (
 )
 
 type MatchmakingController struct {
-	Service   *mathchmakingService.MatchmakingService
-	UsersRepo *usersRepository.UserRepository
+	Service     *mathchmakingService.MatchmakingService
+	UserService *usersService.UserService
 }
 
-func NewMatchmakingController(service *mathchmakingService.MatchmakingService, usersRepo *usersRepository.UserRepository) *MatchmakingController {
+func NewMatchmakingController(service *mathchmakingService.MatchmakingService, userService *usersService.UserService) *MatchmakingController {
 	return &MatchmakingController{
-		Service:   service,
-		UsersRepo: usersRepo,
+		Service:     service,
+		UserService: userService,
 	}
 }
 
 func (ctrl *MatchmakingController) JoinQueue(c *gin.Context) {
-	playerIdStr := c.Query("playerId")
-	gameModeIdStr := c.Query("gameModeId")
+	playerIdStr := c.Param("userId")
+	gameModeIdStr := c.Param("gameModeId")
 
 	if playerIdStr == "" || gameModeIdStr == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "playerId and gameModeId are required"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "userId and gameModeId are required", "data": playerIdStr + " " + gameModeIdStr})
 		return
 	}
 
@@ -42,7 +42,7 @@ func (ctrl *MatchmakingController) JoinQueue(c *gin.Context) {
 		return
 	}
 
-	player, err := ctrl.UsersRepo.GetByID(playerId)
+	player, err := ctrl.UserService.GetById(playerId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "player not found"})
 		return

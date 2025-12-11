@@ -16,7 +16,9 @@ import (
 	gameMovesService "chesscom-copy/backend/internal/models/games/services/gameMoves"
 	gamesService "chesscom-copy/backend/internal/models/games/services/games"
 	mathchmakingService "chesscom-copy/backend/internal/models/games/services/matchmaking"
-
+	userStatsRepository "chesscom-copy/backend/internal/models/users/repository/userStats"
+	usersRepository "chesscom-copy/backend/internal/models/users/repository/users"
+	usersService "chesscom-copy/backend/internal/models/users/services/users"
 	"database/sql"
 )
 
@@ -31,6 +33,9 @@ type GamesControllers struct {
 func InitControllers(db *sql.DB) *GamesControllers {
 	//COMMON
 	gameModeRepo := &gameModesRepository.GameModesRepository{DB: db}
+	userRepo := &usersRepository.UserRepository{DB: db}
+	userStatsRepo := &userStatsRepository.UserStatsRepository{DB: db}
+	userService := &usersService.UserService{Repo: userRepo, UserStatsRepository: userStatsRepo}
 
 	//GAMES
 	gamesRepo := &gamesRepository.GamesRepository{DB: db}
@@ -53,8 +58,8 @@ func InitControllers(db *sql.DB) *GamesControllers {
 
 	//MATCHMAKING
 	matchmakingRepo := &mathchmakingRepository.MatchmakingRepository{DB: db}
-	matchmakingService := &mathchmakingService.MatchmakingService{Repo: matchmakingRepo}
-	matchmakingController := &matchmakingController.MatchmakingController{Service: matchmakingService}
+	matchmakingService := &mathchmakingService.MatchmakingService{Repo: matchmakingRepo, GamesRepo: gamesRepo}
+	matchmakingController := &matchmakingController.MatchmakingController{Service: matchmakingService, UserService: userService}
 
 	return &GamesControllers{
 		GamesControllers:        gamesController,

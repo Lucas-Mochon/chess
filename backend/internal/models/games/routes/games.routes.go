@@ -47,7 +47,7 @@ func RegisterGamesRoutes(rg *gin.RouterGroup,
 
 		Matchmaking := GamesGroup.Group("/matchmaking")
 		{
-			Matchmaking.GET("/matchmaking/join", controllerMatchmaking.JoinQueue)
+			Matchmaking.GET("/join/:userId/:gameModeId", controllerMatchmaking.JoinQueue)
 		}
 	}
 }

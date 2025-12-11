@@ -5,6 +5,7 @@ import (
 	usersDto "chesscom-copy/backend/internal/models/users/dto/users"
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -44,6 +45,7 @@ func (repository *UserRepository) GetByID(userID int) (models.Users, error) {
 		if err == sql.ErrNoRows {
 			return models.Users{}, nil
 		}
+		log.Println("GetByID SQL scan error:", err)
 		return models.Users{}, err
 	}
 
