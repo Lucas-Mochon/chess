@@ -151,7 +151,8 @@ func (repository *GamesRepository) GetOneGame(id int) (gamesDto.GameInformationR
 		SELECT 
 			games.id as game_id,
 			games.result as result,
-			game_mode.name as game_mode_name,
+			game_mode_groups.name as game_mode_name,
+			game_mode.name as game_mode_time,
 			game_mode.id as game_mode_id,
 			white_player.username as white_player_name,
 			white_player.id as white_player_id,
@@ -165,6 +166,7 @@ func (repository *GamesRepository) GetOneGame(id int) (gamesDto.GameInformationR
 			black_player_stats.rating as black_player_rating
 			FROM games
 			JOIN game_modes AS game_mode ON games.game_mode_id = game_mode.id
+			JOIN game_mode_groups ON game_mode.game_mode_groups_id = game_mode_groups.id
 			JOIN users AS white_player ON games.white_player_id = white_player.id
 			JOIN users AS black_player ON games.black_player_id = black_player.id
 			JOIN user_stats AS white_player_stats ON white_player.id = white_player_stats.user_id AND white_player_stats.game_modes_id = game_mode.id
@@ -178,6 +180,7 @@ func (repository *GamesRepository) GetOneGame(id int) (gamesDto.GameInformationR
 		&g.Id,
 		&g.Result,
 		&g.GameModeName,
+		&g.Time,
 		&g.GameModeId,
 		&g.WhitePlayerName,
 		&g.WhitePlayerId,

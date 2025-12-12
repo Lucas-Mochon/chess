@@ -3,6 +3,7 @@ package gamesDto
 type GameInformationResponse struct {
 	Result             string  `json:"result"`
 	Id                 int     `json:"id"`
+	Time               string  `json:"game_mode_time"`
 	GameModeName       string  `json:"game_mode_name"`
 	GameModeId         int     `json:"game_mode_id"`
 	WhitePlayerId      int     `json:"white_player_id"`
