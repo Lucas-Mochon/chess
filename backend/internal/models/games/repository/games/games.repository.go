@@ -4,7 +4,6 @@ import (
 	"chesscom-copy/backend/db/models"
 	gamesDto "chesscom-copy/backend/internal/models/games/dto/games"
 	"database/sql"
-	"log"
 )
 
 type GamesRepository struct {
@@ -95,15 +94,11 @@ func (repository *GamesRepository) GetById(gameId int) (gamesDto.GameRow, error)
 }
 
 func (repository *GamesRepository) Create(game gamesDto.CreateGamesDTO) (models.Games, error) {
+	var playerTime = game.DurationSeconds / 2
 	query := `
-        INSERT INTO games (white_player_id, black_player_id, result, duration_seconds, started_at, ended_at, game_mode_id)
-        VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $5)
+        INSERT INTO games (white_player_id, black_player_id, result, duration_seconds, started_at, ended_at, game_mode_id, black_time, white_time)
+        VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $5, $6, $7)
         RETURNING id`
-
-	log.Println("Executing SQL:", query)
-	log.Println("With args:", game.WhitePlayerId, game.BlackPlayerId, game.Result, game.DurationSeconds, game.GameModeId)
-
-	log.Println("Creating game with:", game)
 
 	var id int
 	err := repository.DB.QueryRow(query,
@@ -112,14 +107,13 @@ func (repository *GamesRepository) Create(game gamesDto.CreateGamesDTO) (models.
 		game.Result,
 		game.DurationSeconds,
 		game.GameModeId,
+		playerTime,
+		playerTime,
 	).Scan(&id)
-	log.Println("request successful, id:", id)
+
 	if err != nil {
-		log.Println("SQL Exec/Scan error:", err)
 		return models.Games{}, err
 	}
-
-	log.Println("Scan successful, id:", id)
 
 	createdGame := models.Games{
 		Id:              id,
@@ -129,7 +123,6 @@ func (repository *GamesRepository) Create(game gamesDto.CreateGamesDTO) (models.
 		DurationSeconds: game.DurationSeconds,
 	}
 
-	log.Println("Game created successfully:", createdGame)
 	return createdGame, nil
 }
 
@@ -153,6 +146,7 @@ func (repository *GamesRepository) GetOneGame(id int) (gamesDto.GameInformationR
 			games.result as result,
 			game_mode_groups.name as game_mode_name,
 			game_mode.name as game_mode_time,
+			game_mode.time as time,
 			game_mode.id as game_mode_id,
 			white_player.username as white_player_name,
 			white_player.id as white_player_id,
@@ -180,6 +174,7 @@ func (repository *GamesRepository) GetOneGame(id int) (gamesDto.GameInformationR
 		&g.Id,
 		&g.Result,
 		&g.GameModeName,
+		&g.GameName,
 		&g.Time,
 		&g.GameModeId,
 		&g.WhitePlayerName,
@@ -219,4 +214,15 @@ func (repository *GamesRepository) GetActiveGameByPlayer(userId int) (*int, erro
 	}
 
 	return &gameId, nil
+}
+
+func (repository *GamesRepository) UpdateTimes(gameId int, whiteTime int, blackTime int) error {
+	_, err := repository.DB.Exec(`
+		UPDATE games
+		SET white_time = $2, black_time = $3
+		WHERE id = $1;
+		`, gameId, whiteTime, blackTime,
+	)
+
+	return err
 }

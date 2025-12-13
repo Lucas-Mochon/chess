@@ -21,9 +21,18 @@ func (service *GamesService) GetById(gameId int) (gamesDto.GameRow, error) {
 }
 
 func (service *GamesService) Create(game gamesDto.CreateGamesDTO) (models.Games, error) {
+	gameMode, err := service.GameModesRepo.GetOne(game.GameModeId)
+	if err != nil {
+		return models.Games{}, err
+	}
+	game.DurationSeconds = gameMode.Time * 2
 	return service.Repo.Create(game)
 }
 
 func (service *GamesService) Finish(game gamesDto.FinishGamesDto) error {
 	return service.Repo.Finish(game)
+}
+
+func (service *GamesService) UpdateTimes(gameId int, blackTime int, whiteTime int) error {
+	return service.Repo.UpdateTimes(gameId, blackTime, whiteTime)
 }

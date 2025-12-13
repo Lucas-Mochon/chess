@@ -6,4 +6,5 @@ type GameMode struct {
 	Name             string `db:"name"`
 	Description      string `db:"description"`
 	DefaultStats     int    `db:"default_stats"`
+	Time             int    `db:"time"`
 }

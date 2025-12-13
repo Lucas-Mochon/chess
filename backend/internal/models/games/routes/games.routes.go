@@ -25,6 +25,7 @@ func RegisterGamesRoutes(rg *gin.RouterGroup,
 		GamesGroup.GET("/get/:gameId", controllerGames.GetById)
 		GamesGroup.POST("/create", controllerGames.Create)
 		GamesGroup.PUT("/finish", controllerGames.Finish)
+		GamesGroup.PUT("/update/times", controllerGames.UpdateTimes)
 
 		GameMoves := GamesGroup.Group("/moves")
 		{

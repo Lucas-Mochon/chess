@@ -1,0 +1,3 @@
+ALTER TABLE games
+ADD COLUMN black_time INTEGER,
+ADD COLUMN white_time INTEGER;
