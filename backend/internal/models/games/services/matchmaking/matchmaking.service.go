@@ -23,6 +23,10 @@ func (service *MatchmakingService) JoinQueue(player models.Users, gameModeId int
 
 	var game gamesDto.CreateGamesDTO
 
+	if p1.Id == p2.Id {
+		return gamesDto.GameInformationResponse{}, nil
+	}
+
 	if rand.Intn(2) == 0 {
 		game = gamesDto.CreateGamesDTO{
 			WhitePlayerId:   p1.Id,

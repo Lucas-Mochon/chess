@@ -6,7 +6,7 @@ import MoveHistory from '../../components/game/MoveHistory';
 import { Row, Col, Container } from 'react-bootstrap';
 import ModalEndGame from '../../components/game/ModalEndGame';
 import ModalNullGame from '../../components/game/ModalNullGame';
-import { ModalSearchPlayer } from '../../components/game/ModalSearchPlayer';
+import ModalSearchPlayer from '../../components/game/ModalSearchPlayer';
 
 const GameScreenContent: React.FC = () => {
     const {

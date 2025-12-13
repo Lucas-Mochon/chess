@@ -1,30 +1,108 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { matchmakingService } from '../../service/matchmaking';
 import { useGame } from '../../contexts/GameContext';
-import "bootstrap/dist/css/bootstrap.min.css";
 
-export const ModalSearchPlayer: React.FC = () => {
-    const [dots, setDots] = useState('');
+interface Game {
+    id: number;
+    result: string;
+    game_mode_name: string;
+    game_mode_id: number;
+    white_player_id: number;
+    white_player_name: string;
+    white_player_picture: string | null;
+    white_player_country: string | null;
+    white_player_rating: number;
+    black_player_id: number;
+    black_player_name: string;
+    black_player_picture: string | null;
+    black_player_country: string | null;
+    black_player_rating: number;
+}
+
+const ModalSearchPlayer: React.FC = () => {
+    const [error, setError] = useState<string | null>(null);
     const { gameState, getOpenModalSearchState, closeModalSearch, setStatus } = useGame();
+    const shouldSearch = gameState.status === 'searching' && getOpenModalSearchState();
+
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const mountedRef = useRef(true);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setDots((prev) => (prev.length < 3 ? prev + '.' : ''));
-        }, 500);
-        return () => clearInterval(interval);
-    }, []);
+        mountedRef.current = true;
 
-    // ❗ timer auto-fermeture
-    useEffect(() => {
-        const timeout = setTimeout(() => {
+        if (!shouldSearch) return;
+
+        const stopPolling = () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+
+        const finishSearch = (game: Game) => {
+            localStorage.setItem('currentGame', JSON.stringify(game));
+            stopPolling();
             closeModalSearch();
-            setStatus('playing')
-            
-        }, 5000);
+            setStatus('playing');
+        };
 
-        return () => clearTimeout(timeout);
-    }, [closeModalSearch, setStatus]);
+        const searchGame = async () => {
+            try {
+                var userID = localStorage.getItem("user");
+                if (!mountedRef.current || !userID) return;
 
-    if (gameState.status === 'nullProposed' || !getOpenModalSearchState()) return null;
+                let userId = parseInt(userID, 10);
+
+                const response = await matchmakingService.joinQueue(userId, 1);
+
+                if (!mountedRef.current) return;
+
+                if (!response) {
+                    setError("Impossible de rejoindre la file d'attente");
+                    return;
+                }
+
+                if (response.status === 'matched' && response.game) {
+                    finishSearch(response.game);
+                    return;
+                }
+
+                if (response.status === 'waiting') {
+                    if (!intervalRef.current) {
+                        intervalRef.current = setInterval(async () => {
+                            try {
+                                const poll = await matchmakingService.checkQueueStatus(userId);
+                                console.log(poll)
+
+                                if (!poll) return;
+
+                                if (poll.status === 'matched' && poll.game) {
+                                    finishSearch(poll.game);
+                                    return;
+                                }
+                            } catch (err) {
+                                console.error("Erreur polling:", err);
+                            }
+                        }, 200);
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur matchmaking:", err);
+                if (mountedRef.current) setError('Erreur lors de la recherche de partie');
+            }
+        };
+
+        searchGame();
+
+        return () => {
+            mountedRef.current = false;
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [shouldSearch, closeModalSearch, setStatus]);
+
+    if (!shouldSearch) return null;
 
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
@@ -38,7 +116,7 @@ export const ModalSearchPlayer: React.FC = () => {
                 </div>
 
                 <h2 className="text-white fw-bold mb-2" style={{ fontSize: "1.2rem" }}>
-                    Recherche d'adversaire{dots}
+                    Recherche d'adversaire…
                 </h2>
 
                 <div className="text-white-50 mb-3" style={{ fontSize: "0.9rem" }}>
@@ -50,7 +128,14 @@ export const ModalSearchPlayer: React.FC = () => {
                          style={{ width: "100%", backgroundColor: "#6fbb6f" }}></div>
                 </div>
 
+                {error && (
+                    <div className="text-danger mt-2" style={{ fontSize: "0.85rem" }}>
+                        {error}
+                    </div>
+                )}
             </div>
         </div>
     );
 };
+
+export default ModalSearchPlayer;
